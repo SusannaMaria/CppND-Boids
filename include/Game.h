@@ -3,6 +3,7 @@
 #include "SFML/Graphics.hpp"
 #include "AltSpriteHolder.hpp"
 #include "PolarVector.hpp"
+#include "obstacle.hpp"
 
 #ifndef GAME_H
 #define GAME_H
@@ -18,8 +19,9 @@ private:
 	int _window_height;
 
 	AltSpriteHolder *ASH;
-
 	AltSpriteHolder *RED;
+
+	Obstacle *obstacle;
 
     sf::Event event;
     sf::Texture T;

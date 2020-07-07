@@ -36,7 +36,8 @@ public:
 	float maxSpeed;
 	float maxForce;
 	float theta;
-
+	bool collide;
+	float colprevent;
 
 	Boid(float x, float y);
 	Boid(float x, float y, bool predCheck);

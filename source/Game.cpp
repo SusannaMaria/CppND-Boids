@@ -2,8 +2,9 @@
 #include "Game.h"
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
+#include "obstacle.hpp"
 
-#define BOID_AMOUNT 300
+#define BOID_AMOUNT 100
 #include <unistd.h>
 #define GetCurrentDir getcwd
 
@@ -25,13 +26,15 @@ Game::Game()
 	this->_window_width = desktop.width;
 	this->_window.create(sf::VideoMode(_window_width, _window_height, desktop.bitsPerPixel), "Boids", sf::Style::None);
 	printInstructions();
+	
 }
 
 Game::~Game(){
 	delete ASH;
 	delete RED;
 	delete M;
-	delete M_red;	
+	delete M_red;
+	delete obstacle;
 }
 
 // Run the simulation. Run creates the boids that we'll display, checks for user
@@ -56,6 +59,11 @@ void Game::Run()
 
     M_red = new sf::Sprite(T_red);
     RED->setTexture(T_red);
+
+	obstacle = new Obstacle();
+
+	obstacle->_window_height=_window_height;
+	obstacle->_window_width=_window_width;
 
 	//Whole block of text can probably simplified in a function as well in order to remove redundancy
 	sf::Font font;
@@ -309,7 +317,7 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 
 	// Draws all of the Boids out, and applies functions that are needed to update.
 	for (int i = 0; i < shapes.size(); i++) {
-		//_window.draw(shapes[i]);
+		_window.draw(shapes[i]);
 
 		/*Drawing and updating of the boids FOV
 		if (flock.getBoid(i).predatorStatus())
@@ -319,7 +327,19 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 			FOVs[i].move(-20, -12);
 		}
 		*/
+		sf::Vector2f p{flock.getBoid(i).location.x,flock.getBoid(i).location.y};
+		//obstacle->m_circle.setPosition(p);
+		float distance = obstacle->getDistance(flock.getBoid(i).location.x+30, flock.getBoid(i).location.y+26,flock.getBoid(i).getTheta());
+		if (obstacle->doCollide(distance)){
+			// if (flock.flock[i].colprevent>0){
 
+			// }else if (flock.flock[i].colprevent<0){
+				
+			// }
+			
+			
+		}
+		cout << flock.getBoid(i).getTheta()<< "|" << distance << "|" << obstacle->doCollide(distance) << "|" <<(flock.getBoid(i).location.x) << "|"<< (flock.getBoid(i).location.y)<< endl;
 
 		//cout << "Boid "<< i <<" Coordinates: (" << shapes[i].getPosition().x << ", " << shapes[i].getPosition().y << ")" << endl;
 		//cout << "Boid Code " << i << " Location: (" << flock.getBoid(i).location.x << ", " << flock.getBoid(i).location.y << ")" << endl;
@@ -333,14 +353,14 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 			shapes[i].setRotation(flock.flock[i].getTheta());
 			ASH->rotateAroundSelf(i,diff,true);			
 		}else{
-			RED->setPosition(i-300,flock.getBoid(i).location.x,flock.getBoid(i).location.y);
+			RED->setPosition(i-BOID_AMOUNT,flock.getBoid(i).location.x,flock.getBoid(i).location.y);
 			shapes[i].setPosition(flock.getBoid(i).location.x+30, flock.getBoid(i).location.y+26);
 
 			// Calculates the angle where the velocity is pointing so that the triangle turns towards it.
 			float diff = -flock.flock[i].updateThetaGetDiff();
 			
 			shapes[i].setRotation(flock.flock[i].getTheta());
-			RED->rotateAroundSelf(i-300,diff,true);					
+			RED->rotateAroundSelf(i-BOID_AMOUNT,diff,true);					
 		}
 
 		// Matches up the location of the shape to the boid
@@ -365,6 +385,7 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 
 	_window.draw(*ASH);
 	_window.draw(*RED);	
+	_window.draw(*obstacle);		
 	_window.display();
 }
 

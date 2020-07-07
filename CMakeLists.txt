@@ -14,6 +14,22 @@ INCLUDE_DIRECTORIES(
   ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+
+option(PACKAGE_TESTS "Build the tests" ON)
+if(PACKAGE_TESTS)
+add_subdirectory(googletest)
+# Add the testing executable
+add_executable(test test/test_distance.cpp source/obstacle.cpp)
+
+target_link_libraries(test 
+    gtest_main 
+    sfml-window sfml-system sfml-graphics    ${OPENGL_gl_LIBRARY}
+    ${GLUT_LIBRARIES} 
+)
+
+endif()
+
+
 find_package(OpenGL)
 find_package(GLUT)
 

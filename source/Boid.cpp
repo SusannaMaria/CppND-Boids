@@ -28,6 +28,7 @@ Boid::Boid(float x, float y): predatorStatus(false)
 	SepW = 1.5;
 	AliW = 1.0;
 	CohW = 1.0;
+	colprevent = 0.0;
 }
 
 Boid::Boid(float x, float y, bool predCheck)
