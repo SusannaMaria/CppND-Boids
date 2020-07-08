@@ -14,7 +14,7 @@ class Boid;
 class Obstacle : public sf::Drawable
 {
 public:
-    Obstacle(float ax=0.f, float ay=0.f, float radius=100.f, size_t pointcloud=10, float detectionradius=100, float fovdistance=100):m_circle(radius, pointcloud ),_detectionradius{detectionradius},_fovdistance{fovdistance}{
+    Obstacle(float ax=0.f, float ay=0.f, float radius=100.f, size_t pointcloud=10):m_circle(radius, pointcloud ),_detectionradius{radius*4}{
         m_circle.setPosition(ax, ay);
         m_circle.setOrigin(radius,radius);
     }

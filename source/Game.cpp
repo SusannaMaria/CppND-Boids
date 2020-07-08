@@ -5,7 +5,7 @@
 #include "obstacle.hpp"
 #include <iostream>
 
-#define BOID_AMOUNT 100
+#define BOID_AMOUNT 400
 #include <unistd.h>
 #define GetCurrentDir getcwd
 using namespace std;
@@ -39,6 +39,7 @@ Game::~Game()
 	delete M;
 	delete M_red;
 	delete obstacle;
+	delete obstacle2;
 }
 
 // Run the simulation. Run creates the boids that we'll display, checks for user
@@ -66,7 +67,11 @@ void Game::Run()
 	M_red = new sf::Sprite(T_red);
 	RED->setTexture(T_red);
 
-	obstacle = new Obstacle(800,500,100);
+
+	obstacle = new Obstacle(800,500,10);
+	obstacle2 = new Obstacle(200,200,10);
+
+
 
 	obstacle->_window_height = _window_height;
 	obstacle->_window_width = _window_width;
@@ -330,6 +335,7 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 
 
 		obstacle->avoid(flock.flock[i]);
+		obstacle2->avoid(flock.flock[i]);
 
 		if (i < BOID_AMOUNT)
 		{
@@ -377,6 +383,7 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 	_window.draw(*ASH);
 	_window.draw(*RED);
 	_window.draw(*obstacle);
+	_window.draw(*obstacle2);	
 	_window.display();
 }
 

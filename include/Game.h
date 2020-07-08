@@ -22,6 +22,7 @@ private:
 	AltSpriteHolder *RED;
 
 	Obstacle *obstacle;
+	Obstacle *obstacle2;
 
     sf::Event event;
     sf::Texture T;
