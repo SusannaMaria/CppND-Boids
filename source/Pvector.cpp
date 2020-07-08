@@ -19,7 +19,7 @@ void Pvector::addVector(Pvector v)
 	x += v.x;
 	y += v.y;
 }
-
+ 
 // Adds to a Pvector by a constant number
 void Pvector::addScalar(float s)
 {

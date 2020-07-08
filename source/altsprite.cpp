@@ -15,7 +15,7 @@ AltSpriteHolder::AltSpriteHolder(const unsigned amount)
         for(unsigned j = 0; j < 4; ++j)
         { VertexHolder.push_back(sf::Vertex(sf::Vector2f(0.f, 0.f), sf::Color(255, 255, 255, 255))); }
 
-        PositionHolder.push_back(sf::Vector2f(0, 0));
+        PositionHolder.push_back(sf::Vector2f(8, 8));
         ScaleHolder.push_back(sf::Vector2f(1.f, 1.f));
         AngleHolder.push_back(0.f);
         TexRectHolder.push_back(sf::IntRect(0, 0, 0, 0));

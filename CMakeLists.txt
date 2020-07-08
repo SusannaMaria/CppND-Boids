@@ -19,7 +19,7 @@ option(PACKAGE_TESTS "Build the tests" ON)
 if(PACKAGE_TESTS)
 add_subdirectory(googletest)
 # Add the testing executable
-add_executable(test test/test_distance.cpp source/obstacle.cpp)
+add_executable(test test/test_distance.cpp source/obstacle.cpp source/Pvector.cpp)
 
 target_link_libraries(test 
     gtest_main 

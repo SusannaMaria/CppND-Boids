@@ -3,11 +3,12 @@
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
 #include "obstacle.hpp"
+#include <iostream>
 
-
-#define BOID_AMOUNT 1
+#define BOID_AMOUNT 100
 #include <unistd.h>
 #define GetCurrentDir getcwd
+using namespace std;
 
 float Pi{3.141529};
 
@@ -44,6 +45,7 @@ Game::~Game()
 // input, and updates the view
 void Game::Run()
 {
+	
 
 	for (int i = 0; i < BOID_AMOUNT; i++)
 	{
@@ -53,9 +55,9 @@ void Game::Run()
 	ASH = new AltSpriteHolder(BOID_AMOUNT);
 	RED = new AltSpriteHolder(BOID_AMOUNT);
 
-	if (!T.loadFromFile(get_current_dir() + "/../assets/fly32x32.png")) ///Change the path as needed.
+	if (!T.loadFromFile(get_current_dir() + "/../assets/fly16x16.png")) ///Change the path as needed.
 		exit(1);
-	if (!T_red.loadFromFile(get_current_dir() + "/../assets/fly32x32_red.png")) ///Change the path as needed.
+	if (!T_red.loadFromFile(get_current_dir() + "/../assets/fly16x16_red.png")) ///Change the path as needed.
 		exit(1);
 
 	M = new sf::Sprite(T);
@@ -64,7 +66,7 @@ void Game::Run()
 	M_red = new sf::Sprite(T_red);
 	RED->setTexture(T_red);
 
-	obstacle = new Obstacle(500,500,100);
+	obstacle = new Obstacle(800,500,100);
 
 	obstacle->_window_height = _window_height;
 	obstacle->_window_width = _window_width;
@@ -126,6 +128,7 @@ void Game::Run()
 
 	// Clock added to calculate frame rate, may cause a small amount of slowdown?
 	sf::Clock clock;
+	_window.setFramerateLimit(120); //
 
 	while (_window.isOpen())
 	{
@@ -259,29 +262,18 @@ void Game::createBoid(float x, float y, bool predStatus, sf::Color fillColor, sf
 	//int size = rand() % 10 - 2;
 	int size = 8;
 	Boid b(x, y, predStatus);
+	
 	sf::CircleShape shape(size, 3);
 	shape.setPosition(x, y);
 	shape.setFillColor(fillColor);
 	shape.setOutlineColor(outlineColor);
 	shape.setOutlineThickness(.5);
 
-	/* FOV would show the radius that the boid would check to apply flocking
-
-	if (predStatus)
-	{
-		sf::CircleShape FOV(20, 30);
-		FOV.setOutlineColor(sf::Color::White);
-		FOV.setOutlineThickness(.25);
-		FOV.setFillColor(sf::Color::Transparent);
-		FOVs.push_back(FOV);
-	}
-	*/
-
 	flock.addBoid(b);
 	shapes.push_back(shape);
 
 	// New Shape is drawn
-	_window.draw(shapes[shapes.size() - 1]);
+	//_window.draw(shapes[shapes.size() - 1]);
 }
 
 //Method of passing text needs refactoring
@@ -324,7 +316,7 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 	// Draws all of the Boids out, and applies functions that are needed to update.
 	for (int i = 0; i < shapes.size(); i++)
 	{
-		_window.draw(shapes[i]);
+		//_window.draw(shapes[i]);
 
 		/*Drawing and updating of the boids FOV
 		if (flock.getBoid(i).predatorStatus())
@@ -334,25 +326,10 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 			FOVs[i].move(-20, -12);
 		}
 		*/
-		sf::Vector2f p{flock.getBoid(i).location.x, flock.getBoid(i).location.y};
+	
 
-		Pvector pv = obstacle->getDistance(flock.getBoid(i).location.x + 30, flock.getBoid(i).location.y + 26, flock.getBoid(i).getTheta());
-		flock.flock[i].
-		cout << pv.x << "|" << pv.y << endl;
-		if ((pv.x != 0.0) && (pv.y =! 0.0)){
-			flock.flock[i].applyForce(pv);			
-		}
-			// if (distance>0){
 
-			// 	flock.flock[i].acceleration.x=flock.flock[i].acceleration.x+0.5;
-			// 	flock.flock[i].acceleration.y=flock.flock[i].acceleration.y+0.5;
-
-			// }else{
-			// 	flock.flock[i].acceleration.x=flock.flock[i].acceleration.x+0.5;
-			// 	flock.flock[i].acceleration.y=flock.flock[i].acceleration.y+0.5;
-			// }
-
-		//cout << flock.getBoid(i).getTheta() << "|" << distance << "|" << obstacle->doCollide(distance) << "|" << (flock.getBoid(i).location.x) << "|" << (flock.getBoid(i).location.y) << endl;
+		obstacle->avoid(flock.flock[i]);
 
 		if (i < BOID_AMOUNT)
 		{
