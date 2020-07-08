@@ -4,17 +4,19 @@
 #include "SFML/Graphics.hpp"
 #include "obstacle.hpp"
 
-#define BOID_AMOUNT 100
+
+#define BOID_AMOUNT 1
 #include <unistd.h>
 #define GetCurrentDir getcwd
 
 float Pi{3.141529};
 
-std::string get_current_dir() {
-   char buff[FILENAME_MAX]; //create string buffer to hold path
-   GetCurrentDir( buff, FILENAME_MAX );
-   string current_working_dir(buff);
-   return current_working_dir;
+std::string get_current_dir()
+{
+	char buff[FILENAME_MAX]; //create string buffer to hold path
+	GetCurrentDir(buff, FILENAME_MAX);
+	string current_working_dir(buff);
+	return current_working_dir;
 }
 
 // Construct window using SFML
@@ -25,11 +27,12 @@ Game::Game()
 	this->_window_height = desktop.height;
 	this->_window_width = desktop.width;
 	this->_window.create(sf::VideoMode(_window_width, _window_height, desktop.bitsPerPixel), "Boids", sf::Style::None);
+
 	printInstructions();
-	
 }
 
-Game::~Game(){
+Game::~Game()
+{
 	delete ASH;
 	delete RED;
 	delete M;
@@ -41,34 +44,35 @@ Game::~Game(){
 // input, and updates the view
 void Game::Run()
 {
-	    
-	for (int i = 0; i < BOID_AMOUNT; i++) {
+
+	for (int i = 0; i < BOID_AMOUNT; i++)
+	{
 		createBoid(_window_width / 2, _window_height / 2, false, sf::Color::Green, sf::Color::Blue);
 	}
 
 	ASH = new AltSpriteHolder(BOID_AMOUNT);
 	RED = new AltSpriteHolder(BOID_AMOUNT);
 
-    if (!T.loadFromFile(get_current_dir()+"/../assets/fly32x32.png")) ///Change the path as needed.
-        exit(1);
-    if (!T_red.loadFromFile(get_current_dir()+"/../assets/fly32x32_red.png")) ///Change the path as needed.
-        exit(1);
+	if (!T.loadFromFile(get_current_dir() + "/../assets/fly32x32.png")) ///Change the path as needed.
+		exit(1);
+	if (!T_red.loadFromFile(get_current_dir() + "/../assets/fly32x32_red.png")) ///Change the path as needed.
+		exit(1);
 
-    M = new sf::Sprite(T);
-    ASH->setTexture(T);
+	M = new sf::Sprite(T);
+	ASH->setTexture(T);
 
-    M_red = new sf::Sprite(T_red);
-    RED->setTexture(T_red);
+	M_red = new sf::Sprite(T_red);
+	RED->setTexture(T_red);
 
-	obstacle = new Obstacle();
+	obstacle = new Obstacle(500,500,100);
 
-	obstacle->_window_height=_window_height;
-	obstacle->_window_width=_window_width;
+	obstacle->_window_height = _window_height;
+	obstacle->_window_width = _window_width;
 
 	//Whole block of text can probably simplified in a function as well in order to remove redundancy
 	sf::Font font;
 	cout << get_current_dir() << endl;
-	font.loadFromFile(get_current_dir()+"/../assets/consola.ttf");
+	font.loadFromFile(get_current_dir() + "/../assets/consola.ttf");
 
 	sf::Text fpsText("Frames per Second: ", font);
 	fpsText.setColor(sf::Color::White);
@@ -89,7 +93,7 @@ void Game::Run()
 	boidText.setColor(sf::Color::White);
 	boidText.setCharacterSize(12);
 	boidText.setPosition(_window_width - 155, 36);
-	
+
 	sf::Text dSepText("Separation Amount: " + to_string(flock.getBoid(0).getDesSep()), font);
 	dSepText.setColor(sf::Color::White);
 	dSepText.setCharacterSize(12);
@@ -120,42 +124,43 @@ void Game::Run()
 	dCohWText.setCharacterSize(12);
 	dCohWText.setPosition(_window_width - 148, 132);
 
-
 	// Clock added to calculate frame rate, may cause a small amount of slowdown?
 	sf::Clock clock;
 
-	while (_window.isOpen()) {
+	while (_window.isOpen())
+	{
 		float currentTime = clock.restart().asSeconds();
 		float fps = 1 / currentTime; // 1 / refresh time = estimate of fps
 		HandleInput();
-		Render(fpsText, fps, preyText, predText, boidText, 
-				dSepText, dAliText, dCohText, dSepWText, dAliWText, dCohWText);
+		Render(fpsText, fps, preyText, predText, boidText,
+			   dSepText, dAliText, dCohText, dSepWText, dAliWText, dCohWText);
 	}
 }
 
 void Game::HandleInput()
 {
 	sf::Event event;
-	while (_window.pollEvent(event)) {
+	while (_window.pollEvent(event))
+	{
 		// "close requested" event: we close the window
 		// Implemented alternate ways to close the window. (Pressing the escape, X, and BackSpace key also close the program.)
 		if ((event.type == sf::Event::Closed) ||
 			(event.type == sf::Event::KeyPressed &&
-			event.key.code == sf::Keyboard::Escape) ||
+			 event.key.code == sf::Keyboard::Escape) ||
 			(event.type == sf::Event::KeyPressed &&
-			event.key.code == sf::Keyboard::BackSpace) ||
+			 event.key.code == sf::Keyboard::BackSpace) ||
 			(event.type == sf::Event::KeyPressed &&
-			event.key.code == sf::Keyboard::X))
+			 event.key.code == sf::Keyboard::X))
 		{
 			_window.close();
 		}
 
 		// Event to create new "prey" boids
 		if (event.type == sf::Event::KeyPressed &&
-			event.key.code == sf::Keyboard::Space) {
+			event.key.code == sf::Keyboard::Space)
+		{
 			createBoid(rand() % _window_width, rand() % _window_height, false, sf::Color::Green, sf::Color::Blue);
 		}
-
 
 		//Events for modifying the values in Boids, possibly can be refactored?
 		if (event.type == sf::Event::KeyPressed &&
@@ -234,13 +239,15 @@ void Game::HandleInput()
 			event.key.code == sf::Keyboard::F5)
 		{
 			_window.close();
-			Game temp;;
+			Game temp;
+			;
 			temp.Run();
 		}
 	}
 
 	// Check for mouse click, draws and adds boid to flock if so.
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
 		// Gets mouse coordinates, sets that as the location of the boid and the shape
 		sf::Vector2i mouseCoords = sf::Mouse::getPosition(_window);
 		createBoid(mouseCoords.x, mouseCoords.y, true, sf::Color::Red, sf::Color::Yellow);
@@ -269,7 +276,6 @@ void Game::createBoid(float x, float y, bool predStatus, sf::Color fillColor, sf
 		FOVs.push_back(FOV);
 	}
 	*/
-	
 
 	flock.addBoid(b);
 	shapes.push_back(shape);
@@ -279,8 +285,8 @@ void Game::createBoid(float x, float y, bool predStatus, sf::Color fillColor, sf
 }
 
 //Method of passing text needs refactoring
-void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predText, sf::Text boidText, 
-				sf::Text dSepText, sf::Text dAliText, sf::Text dCohText, sf::Text dSepWText, sf::Text dAliWText, sf::Text dCohWText)
+void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predText, sf::Text boidText,
+				  sf::Text dSepText, sf::Text dAliText, sf::Text dCohText, sf::Text dSepWText, sf::Text dAliWText, sf::Text dCohWText)
 {
 	_window.clear();
 
@@ -316,7 +322,8 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 	_window.draw(dCohWText);
 
 	// Draws all of the Boids out, and applies functions that are needed to update.
-	for (int i = 0; i < shapes.size(); i++) {
+	for (int i = 0; i < shapes.size(); i++)
+	{
 		_window.draw(shapes[i]);
 
 		/*Drawing and updating of the boids FOV
@@ -327,40 +334,47 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 			FOVs[i].move(-20, -12);
 		}
 		*/
-		sf::Vector2f p{flock.getBoid(i).location.x,flock.getBoid(i).location.y};
-		//obstacle->m_circle.setPosition(p);
-		float distance = obstacle->getDistance(flock.getBoid(i).location.x+30, flock.getBoid(i).location.y+26,flock.getBoid(i).getTheta());
-		if (obstacle->doCollide(distance)){
-			// if (flock.flock[i].colprevent>0){
+		sf::Vector2f p{flock.getBoid(i).location.x, flock.getBoid(i).location.y};
 
-			// }else if (flock.flock[i].colprevent<0){
-				
-			// }
-			
-			
+		Pvector pv = obstacle->getDistance(flock.getBoid(i).location.x + 30, flock.getBoid(i).location.y + 26, flock.getBoid(i).getTheta());
+		flock.flock[i].
+		cout << pv.x << "|" << pv.y << endl;
+		if ((pv.x != 0.0) && (pv.y =! 0.0)){
+			flock.flock[i].applyForce(pv);			
 		}
-		cout << flock.getBoid(i).getTheta()<< "|" << distance << "|" << obstacle->doCollide(distance) << "|" <<(flock.getBoid(i).location.x) << "|"<< (flock.getBoid(i).location.y)<< endl;
+			// if (distance>0){
 
-		//cout << "Boid "<< i <<" Coordinates: (" << shapes[i].getPosition().x << ", " << shapes[i].getPosition().y << ")" << endl;
-		//cout << "Boid Code " << i << " Location: (" << flock.getBoid(i).location.x << ", " << flock.getBoid(i).location.y << ")" << endl;
-		if (i<BOID_AMOUNT){
-			ASH->setPosition(i,flock.getBoid(i).location.x,flock.getBoid(i).location.y);
-			shapes[i].setPosition(flock.getBoid(i).location.x+30, flock.getBoid(i).location.y+26);
+			// 	flock.flock[i].acceleration.x=flock.flock[i].acceleration.x+0.5;
+			// 	flock.flock[i].acceleration.y=flock.flock[i].acceleration.y+0.5;
+
+			// }else{
+			// 	flock.flock[i].acceleration.x=flock.flock[i].acceleration.x+0.5;
+			// 	flock.flock[i].acceleration.y=flock.flock[i].acceleration.y+0.5;
+			// }
+
+		//cout << flock.getBoid(i).getTheta() << "|" << distance << "|" << obstacle->doCollide(distance) << "|" << (flock.getBoid(i).location.x) << "|" << (flock.getBoid(i).location.y) << endl;
+
+		if (i < BOID_AMOUNT)
+		{
+			ASH->setPosition(i, flock.getBoid(i).location.x, flock.getBoid(i).location.y);
+			shapes[i].setPosition(flock.getBoid(i).location.x + 30, flock.getBoid(i).location.y + 26);
 
 			// Calculates the angle where the velocity is pointing so that the triangle turns towards it.
 			float diff = -flock.flock[i].updateThetaGetDiff();
-			
+
 			shapes[i].setRotation(flock.flock[i].getTheta());
-			ASH->rotateAroundSelf(i,diff,true);			
-		}else{
-			RED->setPosition(i-BOID_AMOUNT,flock.getBoid(i).location.x,flock.getBoid(i).location.y);
-			shapes[i].setPosition(flock.getBoid(i).location.x+30, flock.getBoid(i).location.y+26);
+			ASH->rotateAroundSelf(i, diff, true);
+		}
+		else
+		{
+			RED->setPosition(i - BOID_AMOUNT, flock.getBoid(i).location.x, flock.getBoid(i).location.y);
+			shapes[i].setPosition(flock.getBoid(i).location.x + 30, flock.getBoid(i).location.y + 26);
 
 			// Calculates the angle where the velocity is pointing so that the triangle turns towards it.
 			float diff = -flock.flock[i].updateThetaGetDiff();
-			
+
 			shapes[i].setRotation(flock.flock[i].getTheta());
-			RED->rotateAroundSelf(i-BOID_AMOUNT,diff,true);					
+			RED->rotateAroundSelf(i - BOID_AMOUNT, diff, true);
 		}
 
 		// Matches up the location of the shape to the boid
@@ -384,8 +398,8 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 	flock.flocking();
 
 	_window.draw(*ASH);
-	_window.draw(*RED);	
-	_window.draw(*obstacle);		
+	_window.draw(*RED);
+	_window.draw(*obstacle);
 	_window.display();
 }
 
