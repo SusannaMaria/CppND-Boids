@@ -6,7 +6,7 @@
 #include <iostream>
 #include <memory>
 
-#define BOID_AMOUNT 200
+#define BOID_AMOUNT 800
 #include <unistd.h>
 #define GetCurrentDir getcwd
 using namespace std;
@@ -32,6 +32,7 @@ Game::Game()
 
 	printInstructions();
 	srand((int)time(0));
+	flock.init(_window_width,_window_height);
 }
 
 Game::~Game()
@@ -123,13 +124,15 @@ void Game::Run()
 	sf::Clock clock;
 	_window.setFramerateLimit(120); //
 
+	unsigned int counter=0;
 	while (_window.isOpen())
 	{
 		float currentTime = clock.restart().asSeconds();
 		float fps = 1 / currentTime; // 1 / refresh time = estimate of fps
 		HandleInput();
+		counter++;
 		Render(fpsText, fps, preyText, predText, boidText,
-			   dSepText, dAliText, dCohText, dSepWText, dAliWText, dCohWText);
+			   dSepText, dAliText, dCohText, dSepWText, dAliWText, dCohWText, counter);
 	}
 }
 
@@ -262,7 +265,7 @@ void Game::createBoid(float x, float y, bool predStatus, int unsigned spritenr)
 
 //Method of passing text needs refactoring
 void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predText, sf::Text boidText,
-				  sf::Text dSepText, sf::Text dAliText, sf::Text dCohText, sf::Text dSepWText, sf::Text dAliWText, sf::Text dCohWText)
+				  sf::Text dSepText, sf::Text dAliText, sf::Text dCohText, sf::Text dSepWText, sf::Text dAliWText, sf::Text dCohWText,  unsigned int counter)
 {
 	_window.clear();
 
@@ -325,8 +328,11 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 			ASH->rotateAroundSelf(flock.getBoidPtr(i)->Spritenr(), diff, true);
 		}
 	}
-
-	flock.flocking();
+	flock.sort(_window_width,_window_height);
+	//flock.flockingsortall();
+	//flock.flocking();
+	flock.flockit();
+	
 
 	_window.draw(*ASH);
 	_window.draw(*RED);

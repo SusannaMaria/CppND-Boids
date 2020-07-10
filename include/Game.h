@@ -40,7 +40,7 @@ private:
 	// Not a very efficient solution to pass the sf::Text objects through to the render function but it's
 	// a quick way to do it. Needs fix.
 	void Render(sf::Text text, float fps, sf::Text text2, sf::Text text3, sf::Text text4, 
-				sf::Text text5, sf::Text text6, sf::Text text7, sf::Text text8, sf::Text text9, sf::Text text10);
+				sf::Text text5, sf::Text text6, sf::Text text7, sf::Text text8, sf::Text text9, sf::Text text10, unsigned int counter);
 
 	// Refactored duplicate code in it's own function to simplify the creation of boids
 	void createBoid(float x, float y, bool predStatus,int unsigned spritenr);
