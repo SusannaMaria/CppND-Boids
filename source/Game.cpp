@@ -71,7 +71,6 @@ void Game::Run()
 
 	//Whole block of text can probably simplified in a function as well in order to remove redundancy
 	sf::Font font;
-	cout << get_current_dir() << endl;
 	font.loadFromFile(get_current_dir() + "/../assets/consola.ttf");
 
 	sf::Text fpsText("Frames per Second: ", font);
@@ -303,7 +302,6 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 	_window.draw(dCohWText);
 
 	// Draws all of the Boids out, and applies functions that are needed to update.
-	cout << flock.getSize() << endl;
 	for (int i = 0; i < flock.getSize(); i++)
 	{
 
@@ -326,7 +324,6 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 		else
 
 		{
-			cout << i << "|" << flock.getBoidPtr(i)->Spritenr() << endl;
 			ASH->setPosition(flock.getBoidPtr(i)->Spritenr(), flock.getBoidPtr(i)->location.x, flock.getBoidPtr(i)->location.y);
 
 			// Calculates the angle where the velocity is pointing so that the triangle turns towards it.

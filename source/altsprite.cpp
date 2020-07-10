@@ -10,12 +10,12 @@ AltSpriteHolder::AltSpriteHolder()
 
 unsigned int AltSpriteHolder::addSprite()
 {
-    std::cout << VertexHolder.size() << std::endl;
+
     for (unsigned j = 0; j < 4; ++j)
     {
         VertexHolder.push_back(sf::Vertex(sf::Vector2f(0.f, 0.f), sf::Color(255, 255, 255, 255)));
     }
-    std::cout << VertexHolder.size() << std::endl;    
+ 
     Quantity+=1;
     PositionHolder.push_back(sf::Vector2f(8, 8));
     ScaleHolder.push_back(sf::Vector2f(1.f, 1.f));
