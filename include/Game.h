@@ -4,6 +4,7 @@
 #include "AltSpriteHolder.hpp"
 #include "PolarVector.hpp"
 #include "obstacle.hpp"
+#include "ObstaclesContainer.hpp"
 
 #ifndef GAME_H
 #define GAME_H
@@ -21,7 +22,7 @@ private:
 	shared_ptr<AltSpriteHolder> ASH;
 	shared_ptr<AltSpriteHolder> RED;
 
-	vector<shared_ptr<Obstacle> > obstacles;
+	shared_ptr<ObstaclesContainer> obstacles;
 
     sf::Event event;
     sf::Texture T;

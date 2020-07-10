@@ -2,10 +2,10 @@
 #include "Game.h"
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
-#include "obstacle.hpp"
+#include "ObstaclesContainer.hpp"
 #include <iostream>
 #include <memory>
-#define OBSTACLE_AMOUNT 5
+
 #define BOID_AMOUNT 200
 #include <unistd.h>
 #define GetCurrentDir getcwd
@@ -63,11 +63,7 @@ void Game::Run()
 		createBoid(_window_width / 2, _window_height / 2, false, spritenr);
 	}
 
-	for (int i = 0; i < OBSTACLE_AMOUNT; i++)
-	{
-		std::shared_ptr<Obstacle> obstacle = std::make_shared<Obstacle>(rand() % _window_width, rand() % _window_height, rand() % 50);
-		obstacles.push_back(obstacle);
-	}
+	obstacles = std::make_shared<ObstaclesContainer>(_window_width,_window_height,50);
 
 	//Whole block of text can probably simplified in a function as well in order to remove redundancy
 	sf::Font font;
@@ -307,10 +303,7 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 
 		// Applies the three rules to each boid in the flock and changes them accordingly.
 
-		for (int j = 0; j < OBSTACLE_AMOUNT; j++)
-		{
-			obstacles[j]->avoid(flock.getBoidPtr(i));
-		}
+		obstacles->avoid(flock.getBoidPtr(i));
 
 		if (flock.getBoidPtr(i)->predatorStatus)
 		{
@@ -337,10 +330,7 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 
 	_window.draw(*ASH);
 	_window.draw(*RED);
-	for (int i = 0; i < OBSTACLE_AMOUNT; i++)
-	{
-		_window.draw(*obstacles[i]);
-	}
+	_window.draw(*obstacles);
 	_window.display();
 }
 
