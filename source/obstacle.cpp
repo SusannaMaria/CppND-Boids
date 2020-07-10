@@ -45,39 +45,3 @@ void Obstacle::avoid(Boid &boid){
     boid.velocity=result;
 
 }
-
-// //steers a flock to avoid an obstacle
-// float GLBox::avoidObstacles(int boidNum)
-// {
-// 	Boid * b = boidList.at(boidNum);
-
-// 	float steerAngle = 0.0;
-	
-// 	for(int i=0; i<obstacleList.size(); i++)
-// 	{
-// 		Obstacle obs = obstacleList[i];
-
-// 		//find if boid is near the obstacle
-// 		Vector3d vec = obs.center - b->pos;	//vector joining the centers
-// 		float distBetweenCenters = vec.length();
-// 		if(distBetweenCenters < 2*obs.radius)
-// 		{
-// 			float dotProduct = dot(vec, b->vel);
-// 			//find if boid is movind towards the obstacle
-// 			if(dotProduct > 0.0)
-// 			{
-// 				//angle tangent from boid makes with the line joining the center
-// 				//of the obstable
-// 				float tangentAngle = asin(obs.radius/distBetweenCenters);
-// 				//angle between direction of boid and line joining the center
-// 				float directionAngle = acos(dotProduct/(vec.length()*b->vel.length()));
-
-// 				if(directionAngle < tangentAngle)
-// 					steerAngle += (tangentAngle - directionAngle);
-// 				//printf("obstruction: %f\n", steerAngle * 180/3.14);
-// 			}
-// 		}
-// 	}
-
-// 	return steerAngle;
-// }

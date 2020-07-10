@@ -49,7 +49,7 @@ void Flock::addDesSep()
 {
 	for (int i = 0; i < flock.size(); i++)
 	{
-		flock[i].setDesSep(1);
+		flock[i].DesSep(1);
 	}
 }
 
@@ -57,7 +57,7 @@ void Flock::subDesSep()
 {
 	for (int i = 0; i < flock.size(); i++)
 	{
-		flock[i].setDesSep(-1);
+		flock[i].DesSep(-1);
 	}
 }
 
@@ -65,7 +65,7 @@ void Flock::addDesAli()
 {
 	for (int i = 0; i < flock.size(); i++)
 	{
-		flock[i].setDesAli(1);
+		flock[i].DesAli(1);
 	}
 }
 
@@ -73,7 +73,7 @@ void Flock::subDesAli()
 {
 	for (int i = 0; i < flock.size(); i++)
 	{
-		flock[i].setDesAli(-1);
+		flock[i].DesAli(-1);
 	}
 }
 
@@ -81,7 +81,7 @@ void Flock::addDesCoh()
 {
 	for (int i = 0; i < flock.size(); i++)
 	{
-		flock[i].setDesCoh(1);
+		flock[i].DesCoh(1);
 	}
 }
 
@@ -89,7 +89,7 @@ void Flock::subDesCoh()
 {
 	for (int i = 0; i < flock.size(); i++)
 	{
-		flock[i].setDesCoh(-1);
+		flock[i].DesCoh(-1);
 	}
 }
 
@@ -97,7 +97,7 @@ void Flock::addSepW()
 {
 	for (int i = 0; i < flock.size(); i++)
 	{
-		flock[i].setSepW(.1);
+		flock[i].SepW(.1);
 	}
 }
 
@@ -105,7 +105,7 @@ void Flock::subSepW()
 {
 	for (int i = 0; i < flock.size(); i++)
 	{
-		flock[i].setSepW(-.1);
+		flock[i].SepW(-.1);
 	}
 }
 
@@ -113,7 +113,7 @@ void Flock::addAliW()
 {
 	for (int i = 0; i < flock.size(); i++)
 	{
-		flock[i].setAliW(.1);
+		flock[i].AliW(.1);
 	}
 }
 
@@ -121,7 +121,7 @@ void Flock::subAliW()
 {
 	for (int i = 0; i < flock.size(); i++)
 	{
-		flock[i].setAliW(-.1);
+		flock[i].AliW(-.1);
 	}
 }
 
@@ -129,7 +129,7 @@ void Flock::addCohW()
 {
 	for (int i = 0; i < flock.size(); i++)
 	{
-		flock[i].setCohW(.1);
+		flock[i].CohW(.1);
 	}
 }
 
@@ -137,41 +137,6 @@ void Flock::subCohW()
 {
 	for (int i = 0; i < flock.size(); i++)
 	{
-		flock[i].setCohW(-.1);
+		flock[i].CohW(-.1);
 	}
 }
-
-/* Checking and deleting boids when colliding with predators increases
-* time complexity way too much to the point where it hurts performance immensely!
-
-void Flock::collisionChecker(Boid b, vector<sf::CircleShape> shapes)
-{
-	if (!b.predatorStatus)
-	{
-		for (int i = 0; i < flock.size(); i++)
-		{
-			if (flock[i].predatorStatus == true && b.location.distance(flock[i].location) < abs(1))
-			{
-				int boidIndex = getBoidIndex(b);
-				flock.erase(flock.begin() + (boidIndex - 1));
-				shapes.erase(shapes.begin() + (boidIndex - 1));
-			}
-		}
-	}
-}
-
-
-int Flock::getBoidIndex(Boid b)
-{
-	int count = 0;
-	for (int i = 0; i < flock.size(); i++)
-	{
-		if (flock[i] == b)
-		{
-			return i;
-		}
-		count++;
-	}
-	return -1;
-}
-*/

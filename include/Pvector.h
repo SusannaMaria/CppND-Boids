@@ -1,14 +1,34 @@
 #include <iostream>
+#include <cmath>
+#include <limits>
+#include <type_traits>
+#include <algorithm>
 using namespace std;
 
 #ifndef PVECTOR_H_
 #define PVECTOR_H_
 
+
+// if(almost_equal(d1, d2, 2))
+//     std::cout << "d1 almost equals d2\n";
+// else
+//     std::cout << "d1 does not almost equal d2\n";
+// https://en.cppreference.com/w/cpp/types/numeric_limits/epsilon
+template<class T>
+typename std::enable_if<!std::numeric_limits<T>::is_integer, bool>::type
+    almost_equal(T x, T y, int ulp)
+{
+    // the machine epsilon has to be scaled to the magnitude of the values used
+    // and multiplied by the desired precision in ULPs (units in the last place)
+    return std::fabs(x-y) <= std::numeric_limits<T>::epsilon() * std::fabs(x+y) * ulp
+        // unless the result is subnormal
+        || std::fabs(x-y) < std::numeric_limits<T>::min();
+}
+
 // The Pvector class implements Euclidian vectors -- that is, each vector has
 // both a magnitude and a direction. We use Pvectors for implementing movement
 // and the three Boid rules -- cohesion, separation, and matching velocity
 // through the use of acceleration, force, and velocity vectors.
-
 class Pvector {
 
 public:
@@ -22,6 +42,11 @@ public:
 	{
 		x = xComp;
 		y = yComp;
+	}
+
+	bool operator==(const Pvector& lhs)
+	{
+		return (almost_equal(x, lhs.x, 2) && almost_equal(y, lhs.y, 2));
 	}
 
 	//Mutator Functions

@@ -1,3 +1,13 @@
+/**
+ * @file Boid.cpp
+ * @author 	Jorge Yanar(https://github.com/jyanar), Susanna Hepp (https://github.com/SusannaMaria)
+ * @brief Boid Functions
+ * @version 1.0
+ * @date 2020-07-10
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <vector>
@@ -25,12 +35,18 @@ Boid::Boid(float x, float y): predatorStatus(false)
 	desSep = 20;
 	desAli = 70;
 	desCoh = 25;
-	SepW = 1.5;
-	AliW = 1.0;
-	CohW = 1.0;
-	colprevent = 0.0;
+	sepW = 1.5;
+	aliW = 1.0;
+	cohW = 1.0;
 }
 
+/**
+ * @brief Construct a new Boid:: Boid object
+ * 
+ * @param x 
+ * @param y 
+ * @param predCheck 
+ */
 Boid::Boid(float x, float y, bool predCheck)
 {
 	predatorStatus = predCheck;
@@ -50,20 +66,28 @@ Boid::Boid(float x, float y, bool predCheck)
 	desSep = 20;
 	desAli = 70;
 	desCoh = 25;
-	SepW = 1.5;
-	AliW = 1.0;
-	CohW = 1.0;
+	sepW = 1.5;
+	aliW = 1.0;
+	cohW = 1.0;
 	theta = 0.0;
 }
 
-// Adds force Pvector to current force Pvector
+/**
+ * @brief Adds force Pvector to current force Pvector
+ * 
+ * @param force 
+ */
 void Boid::applyForce(Pvector force)
 {
 	acceleration.addVector(force);
 }
 
-// Separation
-// Keeps boids from getting too close to one another
+/**
+ * @brief Keeps boids from getting too close to one another
+ * 
+ * @param boids 
+ * @return Pvector 
+ */
 Pvector Boid::Separation(vector<Boid> boids)
 {
 	// Distance of field of vision for separation between boids
@@ -117,9 +141,13 @@ Pvector Boid::Separation(vector<Boid> boids)
 	return steer;
 }
 
-// Alignment
-// Calculates the average velocity of boids in the field of vision and
-// manipulates the velocity of the current boid in order to match it
+/**
+ * @brief Calculates the average velocity of boids in the field of vision and
+ * manipulates the velocity of the current boid in order to match it
+ * 
+ * @param Boids 
+ * @return Pvector 
+ */
 Pvector Boid::Alignment(vector<Boid> Boids)
 {
 	float neighbordist = desAli; // Field of vision
@@ -151,9 +179,13 @@ Pvector Boid::Alignment(vector<Boid> Boids)
 	}
 }
 
-// Cohesion
-// Finds the average location of nearby boids and manipulates the
-// steering force to move in that direction.
+/**
+ * @brief Finds the average location of nearby boids and manipulates the
+ * steering force to move in that direction.
+ * 
+ * @param Boids 
+ * @return Pvector 
+ */
 Pvector Boid::Cohesion(vector<Boid> Boids)
 {
 	float neighbordist = desCoh;
@@ -179,8 +211,12 @@ Pvector Boid::Cohesion(vector<Boid> Boids)
 	}
 }
 
-// Limits the maxSpeed, finds necessary steering force and
-// normalizes vectors
+/**
+ * @brief Limits the maxSpeed, finds necessary steering force and normalizes vectors
+ * 
+ * @param v 
+ * @return Pvector 
+ */
 Pvector Boid::seek(Pvector v)
 {
 	Pvector desired;
@@ -194,8 +230,10 @@ Pvector Boid::seek(Pvector v)
 	return acceleration;
 }
 
-// Modifies velocity, location, and resets acceleration with values that
-// are given by the three laws.
+/**
+ * @brief Modifies velocity, location, and resets acceleration with values that are given by the three laws.
+ * 
+ */
 void Boid::update()
 {
 	//To make the slow down not as abrupt
@@ -209,9 +247,12 @@ void Boid::update()
 	acceleration.mulScalar(0);
 }
 
-// Run flock() on the flock of boids.
-// This applies the three rules, modifies velocities accordingly, updates data,
-// and corrects boids which are sitting outside of the SFML window
+/**
+ * @brief Applies the three rules, modifies velocities accordingly, updates data,
+ * and corrects boids which are sitting outside of the SFML window
+ * 
+ * @param v 
+ */
 void Boid::run(vector <Boid> v)
 {
 	flock(v);
@@ -219,24 +260,30 @@ void Boid::run(vector <Boid> v)
 	borders();
 }
 
-// Applies the three laws to the flock of boids
+/**
+ * @brief Applies the three laws to the flock of boids
+ * 
+ * @param v 
+ */
 void Boid::flock(vector<Boid> v)
 {
 	Pvector sep = Separation(v);
 	Pvector ali = Alignment(v);
 	Pvector coh = Cohesion(v);
 	// Arbitrarily weight these forces
-	sep.mulScalar(SepW);
-	ali.mulScalar(AliW); // Might need to alter weights for different characteristics
-	coh.mulScalar(CohW);
+	sep.mulScalar(sepW);
+	ali.mulScalar(aliW); // Might need to alter weights for different characteristics
+	coh.mulScalar(cohW);
 	// Add the force vectors to acceleration
 	applyForce(sep);
 	applyForce(ali);
 	applyForce(coh);
 }
 
-// Checks if boids go out of the window and if so, wraps them around to
-// the other side.
+/**
+ * @brief Checks if boids go out of the window and if so, wraps them around to the other side.
+ * 
+ */
 void Boid::borders()
 {
 	if (location.x < 0)    location.x += window_width;
@@ -245,8 +292,12 @@ void Boid::borders()
 	if (location.y > window_height) location.y -= window_height;
 }
 
-// Calculates the angle for the velocity of a boid which allows the visual
-// image to rotate in the direction that it is going in.
+/**
+ * @brief Calculates the angle for the velocity of a boid which allows the visual image to rotate in the direction that it is going in.
+ * 
+ * @param v 
+ * @return float 
+ */
 float Boid::getAngle(Pvector v) const
 {
 	// From the definition of the dot product
@@ -254,38 +305,44 @@ float Boid::getAngle(Pvector v) const
 	return angle;
 }
 
-float Boid::getDesSep() const { return desSep; }
-
-float Boid::getDesAli() const { return desAli; }
-
-float Boid::getDesCoh() const { return desCoh; }
-
-float Boid::getSepW() const { return SepW; }
-
-float Boid::getAliW() const { return AliW; }
-
-float Boid::getCohW() const { return CohW; }
-
-float Boid::getTheta() const { return this->theta; }
-
-void Boid::setDesSep(float x) { desSep += x; }
-
-void Boid::setDesAli(float x) { desAli += x; }
-
-void Boid::setDesCoh(float x) { desCoh += x; }
-
-void Boid::setSepW(float x) { SepW += x; }
-
-void Boid::setAliW(float x) { AliW += x; }
-
-void Boid::setCohW(float x) { CohW += x; }
-
-void Boid::setTheta(float t) { theta = t; }
-
-
+/**
+ * @brief Get difference of theta which will be applied to rotate the sprite
+ * 
+ * @return float 
+ */
 float Boid::updateThetaGetDiff(){
 	float t = getAngle(this->velocity);
 	float diff = theta-t;
 	theta = t;
 	return diff;
 }
+
+float Boid::DesSep() const { return desSep; }
+
+float Boid::DesAli() const { return desAli; }
+
+float Boid::DesCoh() const { return desCoh; }
+
+float Boid::SepW() const { return sepW; }
+
+float Boid::AliW() const { return aliW; }
+
+float Boid::CohW() const { return cohW; }
+
+float Boid::Theta() const { return this->theta; }
+
+Pvector Boid::Location()const { return location; }
+
+void Boid::DesSep(float x) { desSep += x; }
+
+void Boid::DesAli(float x) { desAli += x; }
+
+void Boid::DesCoh(float x) { desCoh += x; }
+
+void Boid::SepW(float x) { sepW += x; }
+
+void Boid::AliW(float x) { aliW += x; }
+
+void Boid::CohW(float x) { cohW += x; }
+
+void Boid::Theta(float t) { theta = t; }

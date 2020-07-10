@@ -41,8 +41,6 @@ public:
 	void addCohW();
 	void subCohW();
 
-	//void collisionChecker(Boid b, vector<sf::CircleShape> shapes);
-	//int getBoidIndex(Boid b);
 };
 
 #endif
