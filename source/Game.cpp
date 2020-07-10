@@ -4,9 +4,9 @@
 #include "SFML/Graphics.hpp"
 #include "obstacle.hpp"
 #include <iostream>
-
-
-#define BOID_AMOUNT 1
+#include <memory>
+#define OBSTACLE_AMOUNT 5
+#define BOID_AMOUNT 200
 #include <unistd.h>
 #define GetCurrentDir getcwd
 using namespace std;
@@ -31,16 +31,11 @@ Game::Game()
 	this->_window.create(sf::VideoMode(_window_width, _window_height, desktop.bitsPerPixel), "Boids", sf::Style::None);
 
 	printInstructions();
+	srand((int)time(0));
 }
 
 Game::~Game()
 {
-	delete ASH;
-	delete RED;
-	delete M;
-	delete M_red;
-	delete obstacle;
-	delete obstacle2;
 }
 
 // Run the simulation. Run creates the boids that we'll display, checks for user
@@ -48,18 +43,18 @@ Game::~Game()
 void Game::Run()
 {
 
-	ASH = new AltSpriteHolder();
-	RED = new AltSpriteHolder();
+	ASH = std::make_shared<AltSpriteHolder>();
+	RED = std::make_shared<AltSpriteHolder>();
 
 	if (!T.loadFromFile(get_current_dir() + "/../assets/fly16x16.png")) ///Change the path as needed.
 		exit(1);
 	if (!T_red.loadFromFile(get_current_dir() + "/../assets/fly16x16_red.png")) ///Change the path as needed.
 		exit(1);
 
-	M = new sf::Sprite(T);
+	M = std::make_shared<sf::Sprite>(T);
 	ASH->setTexture(T);
 
-	M_red = new sf::Sprite(T_red);
+	M_red = std::make_shared<sf::Sprite>(T_red);
 	RED->setTexture(T_red);
 
 	for (int i = 0; i < BOID_AMOUNT; i++)
@@ -68,16 +63,11 @@ void Game::Run()
 		createBoid(_window_width / 2, _window_height / 2, false, spritenr);
 	}
 
-
-
-
-
-
-	obstacle = new Obstacle(800, 500, 10);
-	obstacle2 = new Obstacle(200, 200, 10);
-
-	obstacle->_window_height = _window_height;
-	obstacle->_window_width = _window_width;
+	for (int i = 0; i < OBSTACLE_AMOUNT; i++)
+	{
+		std::shared_ptr<Obstacle> obstacle = std::make_shared<Obstacle>(rand() % _window_width, rand() % _window_height, rand() % 50);
+		obstacles.push_back(obstacle);
+	}
 
 	//Whole block of text can probably simplified in a function as well in order to remove redundancy
 	sf::Font font;
@@ -319,9 +309,11 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 
 		// Applies the three rules to each boid in the flock and changes them accordingly.
 
-		obstacle->avoid(flock.getBoidPtr(i));
-		obstacle2->avoid(flock.getBoidPtr(i));
-		
+		for (int j = 0; j < OBSTACLE_AMOUNT; j++)
+		{
+			obstacles[j]->avoid(flock.getBoidPtr(i));
+		}
+
 		if (flock.getBoidPtr(i)->predatorStatus)
 		{
 			RED->setPosition(flock.getBoidPtr(i)->Spritenr(), flock.getBoidPtr(i)->location.x, flock.getBoidPtr(i)->location.y);
@@ -348,8 +340,10 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 
 	_window.draw(*ASH);
 	_window.draw(*RED);
-	_window.draw(*obstacle);
-	_window.draw(*obstacle2);
+	for (int i = 0; i < OBSTACLE_AMOUNT; i++)
+	{
+		_window.draw(*obstacles[i]);
+	}
 	_window.display();
 }
 

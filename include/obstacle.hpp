@@ -14,7 +14,7 @@ class Boid;
 class Obstacle : public sf::Drawable
 {
 public:
-    Obstacle(float ax=0.f, float ay=0.f, float radius=100.f, size_t pointcloud=10):m_circle(radius, pointcloud ),_detectionradius{radius*4}{
+    Obstacle(float ax=0.f, float ay=0.f, float radius=100.f, size_t pointcloud=10):m_circle(radius, pointcloud ),_detectionradius{radius*2}{
         m_circle.setPosition(ax, ay);
         m_circle.setOrigin(radius,radius);
     }
@@ -24,8 +24,6 @@ public:
     bool doCollide(float ax, float ay, float theta);
     float getDistance(float ax, float ay, float theta);
     sf::CircleShape m_circle;
-	int _window_width;
-	int _window_height;
     float _detectionradius;
     float _fovdistance;
 

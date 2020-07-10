@@ -18,19 +18,18 @@ private:
 	int _window_width;
 	int _window_height;
 
-	AltSpriteHolder *ASH;
-	AltSpriteHolder *RED;
+	shared_ptr<AltSpriteHolder> ASH;
+	shared_ptr<AltSpriteHolder> RED;
 
-	Obstacle *obstacle;
-	Obstacle *obstacle2;
+	vector<shared_ptr<Obstacle> > obstacles;
 
     sf::Event event;
     sf::Texture T;
     sf::Texture T_red;	
 
-    sf::Sprite *M;
+    shared_ptr<sf::Sprite> M;
 
-	sf::Sprite *M_red;
+	shared_ptr<sf::Sprite> M_red;
 
 
     std::vector<PolarVector> PolVec;
