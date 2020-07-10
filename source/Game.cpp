@@ -5,7 +5,8 @@
 #include "obstacle.hpp"
 #include <iostream>
 
-#define BOID_AMOUNT 400
+
+#define BOID_AMOUNT 1
 #include <unistd.h>
 #define GetCurrentDir getcwd
 using namespace std;
@@ -47,13 +48,8 @@ Game::~Game()
 void Game::Run()
 {
 
-	for (int i = 0; i < BOID_AMOUNT; i++)
-	{
-		createBoid(_window_width / 2, _window_height / 2, false);
-	}
-
-	ASH = new AltSpriteHolder(BOID_AMOUNT);
-	RED = new AltSpriteHolder(BOID_AMOUNT);
+	ASH = new AltSpriteHolder();
+	RED = new AltSpriteHolder();
 
 	if (!T.loadFromFile(get_current_dir() + "/../assets/fly16x16.png")) ///Change the path as needed.
 		exit(1);
@@ -65,6 +61,17 @@ void Game::Run()
 
 	M_red = new sf::Sprite(T_red);
 	RED->setTexture(T_red);
+
+	for (int i = 0; i < BOID_AMOUNT; i++)
+	{
+		unsigned int spritenr = ASH->addSprite();
+		createBoid(_window_width / 2, _window_height / 2, false, spritenr);
+	}
+
+
+
+
+
 
 	obstacle = new Obstacle(800, 500, 10);
 	obstacle2 = new Obstacle(200, 200, 10);
@@ -97,32 +104,32 @@ void Game::Run()
 	boidText.setCharacterSize(12);
 	boidText.setPosition(_window_width - 155, 36);
 
-	sf::Text dSepText("Separation Amount: " + to_string(flock.getBoid(0).DesSep()), font);
+	sf::Text dSepText("Separation Amount: " + to_string(flock.getBoidPtr(0)->DesSep()), font);
 	dSepText.setFillColor(sf::Color::White);
 	dSepText.setCharacterSize(12);
 	dSepText.setPosition(_window_width - 162, 60);
 
-	sf::Text dAliText("Alignment Amount: " + to_string(flock.getBoid(0).DesAli()), font);
+	sf::Text dAliText("Alignment Amount: " + to_string(flock.getBoidPtr(0)->DesAli()), font);
 	dAliText.setFillColor(sf::Color::White);
 	dAliText.setCharacterSize(12);
 	dAliText.setPosition(_window_width - 155, 72);
 
-	sf::Text dCohText("Cohesion Amount: " + to_string(flock.getBoid(0).DesCoh()), font);
+	sf::Text dCohText("Cohesion Amount: " + to_string(flock.getBoidPtr(0)->DesCoh()), font);
 	dCohText.setFillColor(sf::Color::White);
 	dCohText.setCharacterSize(12);
 	dCohText.setPosition(_window_width - 148, 84);
 
-	sf::Text dSepWText("Separation Weight: " + to_string(flock.getBoid(0).SepW()), font);
+	sf::Text dSepWText("Separation Weight: " + to_string(flock.getBoidPtr(0)->SepW()), font);
 	dSepWText.setFillColor(sf::Color::White);
 	dSepWText.setCharacterSize(12);
 	dSepWText.setPosition(_window_width - 162, 108);
 
-	sf::Text dAliWText("Alignment Weight: " + to_string(flock.getBoid(0).AliW()), font);
+	sf::Text dAliWText("Alignment Weight: " + to_string(flock.getBoidPtr(0)->AliW()), font);
 	dAliWText.setFillColor(sf::Color::White);
 	dAliWText.setCharacterSize(12);
 	dAliWText.setPosition(_window_width - 155, 120);
 
-	sf::Text dCohWText("Cohesion Weight: " + to_string(flock.getBoid(0).CohW()), font);
+	sf::Text dCohWText("Cohesion Weight: " + to_string(flock.getBoidPtr(0)->CohW()), font);
 	dCohWText.setFillColor(sf::Color::White);
 	dCohWText.setCharacterSize(12);
 	dCohWText.setPosition(_window_width - 148, 132);
@@ -163,7 +170,8 @@ void Game::HandleInput()
 		if (event.type == sf::Event::KeyPressed &&
 			event.key.code == sf::Keyboard::Space)
 		{
-			createBoid(rand() % _window_width, rand() % _window_height, false);
+			unsigned int spritenr = ASH->addSprite();
+			createBoid(rand() % _window_width, rand() % _window_height, false, spritenr);
 		}
 
 		//Events for modifying the values in Boids, possibly can be refactored?
@@ -254,15 +262,17 @@ void Game::HandleInput()
 	{
 		// Gets mouse coordinates, sets that as the location of the boid and the shape
 		sf::Vector2i mouseCoords = sf::Mouse::getPosition(_window);
-		createBoid(mouseCoords.x, mouseCoords.y, true);
+		unsigned int spritenr = RED->addSprite();
+		createBoid(mouseCoords.x, mouseCoords.y, true, spritenr);
 	}
 }
 
-void Game::createBoid(float x, float y, bool predStatus)
+void Game::createBoid(float x, float y, bool predStatus, int unsigned spritenr)
 {
-	Boid b(x, y, predStatus);
+	flock.addBoid(x, y, predStatus, spritenr);
 
-	flock.addBoid(b);
+	// Boid b(x, y, predStatus);
+	// flock.addBoid(b);
 }
 
 //Method of passing text needs refactoring
@@ -284,51 +294,53 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 	boidText.setString("Total Boid Count: " + to_string(flock.getSize()));
 	_window.draw(boidText);
 
-	dSepText.setString("Separation Amount: " + to_string(int(flock.getBoid(0).DesSep() + 0.5)));
+	dSepText.setString("Separation Amount: " + to_string(int(flock.getBoidPtr(0)->DesSep() + 0.5)));
 	_window.draw(dSepText);
 
-	dAliText.setString("Alignment Amount: " + to_string(int(flock.getBoid(0).DesAli() + 0.5)));
+	dAliText.setString("Alignment Amount: " + to_string(int(flock.getBoidPtr(0)->DesAli() + 0.5)));
 	_window.draw(dAliText);
 
-	dCohText.setString("Cohesion Amount: " + to_string(int(flock.getBoid(0).DesCoh() + 0.5)));
+	dCohText.setString("Cohesion Amount: " + to_string(int(flock.getBoidPtr(0)->DesCoh() + 0.5)));
 	_window.draw(dCohText);
 
-	dSepWText.setString("Separation Weight: " + to_string(flock.getBoid(0).SepW()));
+	dSepWText.setString("Separation Weight: " + to_string(flock.getBoidPtr(0)->SepW()));
 	_window.draw(dSepWText);
 
-	dAliWText.setString("Alignment Weight: " + to_string(flock.getBoid(0).AliW()));
+	dAliWText.setString("Alignment Weight: " + to_string(flock.getBoidPtr(0)->AliW()));
 	_window.draw(dAliWText);
 
-	dCohWText.setString("Cohesion Weight: " + to_string(flock.getBoid(0).CohW()));
+	dCohWText.setString("Cohesion Weight: " + to_string(flock.getBoidPtr(0)->CohW()));
 	_window.draw(dCohWText);
 
 	// Draws all of the Boids out, and applies functions that are needed to update.
-
+	cout << flock.getSize() << endl;
 	for (int i = 0; i < flock.getSize(); i++)
 	{
 
 		// Applies the three rules to each boid in the flock and changes them accordingly.
 
-		obstacle->avoid(flock.flock[i]);
-		obstacle2->avoid(flock.flock[i]);
-
-		if (i < BOID_AMOUNT)
+		obstacle->avoid(flock.getBoidPtr(i));
+		obstacle2->avoid(flock.getBoidPtr(i));
+		
+		if (flock.getBoidPtr(i)->predatorStatus)
 		{
-			ASH->setPosition(i, flock.getBoid(i).location.x, flock.getBoid(i).location.y);
+			RED->setPosition(flock.getBoidPtr(i)->Spritenr(), flock.getBoidPtr(i)->location.x, flock.getBoidPtr(i)->location.y);
 
 			// Calculates the angle where the velocity is pointing so that the triangle turns towards it.
-			float diff = -flock.flock[i].updateThetaGetDiff();
+			float diff = -flock.getBoidPtr(i)->updateThetaGetDiff();
 
-			ASH->rotateAroundSelf(i, diff, true);
+			RED->rotateAroundSelf(flock.getBoidPtr(i)->Spritenr(), diff, true);
 		}
 		else
+
 		{
-			RED->setPosition(i - BOID_AMOUNT, flock.getBoid(i).location.x, flock.getBoid(i).location.y);
+			cout << i << "|" << flock.getBoidPtr(i)->Spritenr() << endl;
+			ASH->setPosition(flock.getBoidPtr(i)->Spritenr(), flock.getBoidPtr(i)->location.x, flock.getBoidPtr(i)->location.y);
 
 			// Calculates the angle where the velocity is pointing so that the triangle turns towards it.
-			float diff = -flock.flock[i].updateThetaGetDiff();
+			float diff = -flock.getBoidPtr(i)->updateThetaGetDiff();
 
-			RED->rotateAroundSelf(i - BOID_AMOUNT, diff, true);
+			ASH->rotateAroundSelf(flock.getBoidPtr(i)->Spritenr(), diff, true);
 		}
 	}
 

@@ -47,7 +47,7 @@ Boid::Boid(float x, float y): predatorStatus(false)
  * @param y 
  * @param predCheck 
  */
-Boid::Boid(float x, float y, bool predCheck)
+Boid::Boid(float x, float y, bool predCheck, int unsigned spritenr)
 {
 	predatorStatus = predCheck;
 	if (predCheck == true) {
@@ -70,6 +70,7 @@ Boid::Boid(float x, float y, bool predCheck)
 	aliW = 1.0;
 	cohW = 1.0;
 	theta = 0.0;
+	this->spritenr =spritenr;
 }
 
 /**
@@ -88,6 +89,59 @@ void Boid::applyForce(Pvector force)
  * @param boids 
  * @return Pvector 
  */
+Pvector Boid::Separation(vector<shared_ptr<Boid> > const &boids)
+{
+	// Distance of field of vision for separation between boids
+	float desiredseparation = desSep;
+	Pvector steer(0, 0);
+	int count = 0;
+	// For every boid in the system, check if it's too close
+	for (int i = 0; i < boids.size(); i++) {
+		// Calculate distance from current boid to boid we're looking at
+		float d = location.distance(boids[i]->location);
+		// If this is a fellow boid and it's too close, move away from it
+		if ((d > 0) && (d < desiredseparation)) {
+			Pvector diff(0, 0);
+			diff = diff.subTwoVector(location, boids[i]->location);
+			diff.normalize();
+			diff.divScalar(d);      // Weight by distance
+			steer.addVector(diff);
+			count++;
+		}
+		// If current boid is a predator and the boid we're looking at is also
+		// a predator, then separate only slightly
+		if ((d > 0) && (d < desSep) && predatorStatus == true
+			&& boids[i]->predatorStatus == true) {
+			Pvector pred2pred(0, 0);
+			pred2pred = pred2pred.subTwoVector(location, boids[i]->location);
+			pred2pred.normalize();
+			pred2pred.divScalar(d);
+			steer.addVector(pred2pred);
+			count++;
+		}
+		// If current boid is not a predator, but the boid we're looking at is
+		// a predator, then create a large separation Pvector
+		else if ((d > 0) && (d < desiredseparation + 70) && boids[i]->predatorStatus == true) {
+			Pvector pred(0, 0);
+			pred = pred.subTwoVector(location, boids[i]->location);
+			pred.mulScalar(900);
+			steer.addVector(pred);
+			count++;
+		}
+	}
+	// Adds average difference of location to acceleration
+	if (count > 0)
+		steer.divScalar(static_cast<float>(count));
+	if (steer.magnitude() > 0) {
+		// Steering = Desired - Velocity
+		steer.normalize();
+		steer.mulScalar(maxSpeed);
+		steer.subVector(velocity);
+		steer.limit(maxForce);
+	}
+	return steer;
+}
+
 Pvector Boid::Separation(vector<Boid> boids)
 {
 	// Distance of field of vision for separation between boids
@@ -148,6 +202,38 @@ Pvector Boid::Separation(vector<Boid> boids)
  * @param Boids 
  * @return Pvector 
  */
+
+Pvector Boid::Alignment(vector<shared_ptr<Boid> > const &boids)
+{
+	float neighbordist = desAli; // Field of vision
+
+	Pvector sum(0, 0);
+	int count = 0;
+	for (int i = 0; i < boids.size(); i++) {
+		float d = location.distance(boids[i]->location);
+
+		if ((d > 0) && (d < neighbordist)) { // 0 < d < 50
+			sum.addVector(boids[i]->velocity);
+			count++;
+		}
+	}
+	// If there are boids close enough for alignment...
+	if (count > 0) {
+		sum.divScalar(static_cast<float>(count));// Divide sum by the number of close boids (average of velocity)
+		sum.normalize();            // Turn sum into a unit vector, and
+		sum.mulScalar(maxSpeed);    // Multiply by maxSpeed
+		// Steer = Desired - Velocity
+		Pvector steer;
+		steer = steer.subTwoVector(sum, velocity); //sum = desired(average)
+		steer.limit(maxForce);
+		return steer;
+	}
+	else {
+		Pvector temp(0, 0);
+		return temp;
+	}
+}
+
 Pvector Boid::Alignment(vector<Boid> Boids)
 {
 	float neighbordist = desAli; // Field of vision
@@ -186,6 +272,31 @@ Pvector Boid::Alignment(vector<Boid> Boids)
  * @param Boids 
  * @return Pvector 
  */
+Pvector Boid::Cohesion(vector<shared_ptr<Boid> > const &boids)
+{
+	float neighbordist = desCoh;
+	Pvector sum(0, 0);
+	int count = 0;
+	for (int i = 0; i < boids.size(); i++) {
+		float d = location.distance(boids[i]->location);
+
+		if (boids[i]->predatorStatus) neighbordist = 15;
+
+		if ((d > 0) && (d < neighbordist)) {
+			sum.addVector(boids[i]->location);
+			count++;
+		}
+	}
+	if (count > 0) {
+		sum.divScalar(count);
+		return seek(sum);
+	}
+	else {
+		Pvector temp(0, 0);
+		return temp;
+	}
+}
+
 Pvector Boid::Cohesion(vector<Boid> Boids)
 {
 	float neighbordist = desCoh;
@@ -253,12 +364,28 @@ void Boid::update()
  * 
  * @param v 
  */
-void Boid::run(vector <Boid> v)
-{
+void Boid::run(vector<shared_ptr<Boid> > const &v){
 	flock(v);
 	update();
 	borders();
 }
+
+
+void Boid::flock(vector<shared_ptr<Boid> > const &v)
+{
+	Pvector sep = Separation(v);
+	Pvector ali = Alignment(v);
+	Pvector coh = Cohesion(v);
+	// Arbitrarily weight these forces
+	sep.mulScalar(sepW);
+	ali.mulScalar(aliW); // Might need to alter weights for different characteristics
+	coh.mulScalar(cohW);
+	// Add the force vectors to acceleration
+	applyForce(sep);
+	applyForce(ali);
+	applyForce(coh);
+}
+
 
 /**
  * @brief Applies the three laws to the flock of boids
@@ -317,6 +444,8 @@ float Boid::updateThetaGetDiff(){
 	return diff;
 }
 
+unsigned int Boid::Spritenr() const {return spritenr;};
+
 float Boid::DesSep() const { return desSep; }
 
 float Boid::DesAli() const { return desAli; }
@@ -346,3 +475,5 @@ void Boid::AliW(float x) { aliW += x; }
 void Boid::CohW(float x) { cohW += x; }
 
 void Boid::Theta(float t) { theta = t; }
+
+void Boid::Spritenr(unsigned int n) { spritenr = n; }

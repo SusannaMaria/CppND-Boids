@@ -43,7 +43,7 @@ private:
 				sf::Text text5, sf::Text text6, sf::Text text7, sf::Text text8, sf::Text text9, sf::Text text10);
 
 	// Refactored duplicate code in it's own function to simplify the creation of boids
-	void createBoid(float x, float y, bool predStatus);
+	void createBoid(float x, float y, bool predStatus,int unsigned spritenr);
 	void HandleInput();
 
 public:

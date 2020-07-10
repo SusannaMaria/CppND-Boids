@@ -6,15 +6,17 @@
 #define FLOCK_H_
 
 // Brief description of Flock Class:
-// This file contains the class needed to create a flock of boids. It utilizes
-// the boids class and initializes boid flocks with parameters that can be
-// specified. This class will be utilized in main.
-
+// This file contains the class needed to create a flock of boids. It 
+/**
+ * @brief utilizes boids class and initializes boid flocks with parameters
+ * 
+ */
 class Flock {
 public:
-	vector<Boid> flock;
+
 	//Constructors
 	Flock() {}
+	//vector<Boid> flock;
 	// Accessor functions
 	int getSize() const;
 	Boid getBoid(int i);
@@ -22,6 +24,7 @@ public:
 	// Mutator Functions
 	void addBoid(Boid b);
 	void flocking();
+	void pflocking();
 
 	//For accessing values and modifying values in Game.cpp
 	int preyCount();
@@ -40,6 +43,13 @@ public:
 	void subAliW();
 	void addCohW();
 	void subCohW();
+	void addBoid(float x, float y, bool predStatus, int unsigned spritenr);
+
+	shared_ptr<Boid> getBoidPtr(int id);
+
+private:
+	vector<shared_ptr<Boid> > _flockvect;
+
 
 };
 

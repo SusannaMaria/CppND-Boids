@@ -9,7 +9,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include "Pvector.h"
-
+#include <memory>
 class Boid;
 class Obstacle : public sf::Drawable
 {
@@ -18,7 +18,7 @@ public:
         m_circle.setPosition(ax, ay);
         m_circle.setOrigin(radius,radius);
     }
-
+    void avoid(shared_ptr<Boid> boid);
     void avoid(Boid &boid);
     bool doCollide(float distance);
     bool doCollide(float ax, float ay, float theta);

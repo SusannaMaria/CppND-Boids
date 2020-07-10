@@ -14,6 +14,9 @@
 
 #include "Pvector.h"
 #include <vector>
+#include <memory>
+
+using namespace std;
 
 /**
  * Boid Class to implement simple entities called boids
@@ -29,7 +32,6 @@ public:
 	float maxSpeed;		  // Limits magnitude of velocity vector.
 	float maxForce;		  // Limits magnitude of acceleration vector. (F = m*a!)
 	float theta;		  // Rotational position in 2-dimensional space
-
 
 	/**
 	 * @brief Equal operator using location of boid
@@ -55,7 +57,7 @@ public:
 	 * @param y initialize with y-Position
 	 * @param predCheck Predator will have higher speeds
 	 */
-	Boid(float x, float y, bool predCheck);
+	Boid(float x, float y, bool predCheck, int unsigned spritenr);
 
 	/**
 	 * @brief Adds force Pvector to current force Pvector
@@ -71,6 +73,7 @@ public:
 	 * @param Boids 
 	 * @return Pvector 
 	 */
+	Pvector Separation(vector<shared_ptr<Boid> > const &boids);
 	Pvector Separation(vector<Boid> Boids);
 
 	/**
@@ -79,7 +82,9 @@ public:
 	 * @param Boids 
 	 * @return Pvector 
 	 */
+	Pvector Alignment(vector<shared_ptr<Boid> > const &boids);
 	Pvector Alignment(vector<Boid> Boids);
+
 
 	/**
 	 * @brief  Current boid to seek the center of mass of nearby boids.
@@ -87,12 +92,16 @@ public:
 	 * @param Boids 
 	 * @return Pvector 
 	 */
+	Pvector Cohesion(vector<shared_ptr<Boid> > const &boids);
 	Pvector Cohesion(vector<Boid> Boids);
 
 	///Functions involving SFML and visualisation linking
 	Pvector seek(Pvector v);
 	void run(vector<Boid> v);
+	void run(vector<shared_ptr<Boid> > const &v);
+
 	void update();
+	void flock(vector<shared_ptr<Boid> > const &v);
 	void flock(vector<Boid> v);
 	void borders();
 	float getAngle(Pvector v) const;
@@ -105,6 +114,7 @@ public:
 	float AliW() const;
 	float CohW() const;
 	float Theta() const;
+	unsigned int Spritenr() const;
 
 	void DesSep(float x);
 	void DesAli(float x);
@@ -115,6 +125,7 @@ public:
 	void Theta(float theta);
 
 	float updateThetaGetDiff();
+	void Spritenr(unsigned int n);
 
 private:
 	float desSep;
@@ -123,4 +134,5 @@ private:
 	float sepW;
 	float aliW;
 	float cohW;
+	int unsigned spritenr;
 };

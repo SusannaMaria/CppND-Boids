@@ -1,3 +1,16 @@
+/**
+ * @file Pvector.h
+ * @author your name (you@domain.com)
+ * @brief 
+ * @version 0.1
+ * @date 2020-07-10
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
+
+#pragma once
+
 #include <iostream>
 #include <cmath>
 #include <limits>
@@ -5,15 +18,15 @@
 #include <algorithm>
 using namespace std;
 
-#ifndef PVECTOR_H_
-#define PVECTOR_H_
-
-
-// if(almost_equal(d1, d2, 2))
-//     std::cout << "d1 almost equals d2\n";
-// else
-//     std::cout << "d1 does not almost equal d2\n";
-// https://en.cppreference.com/w/cpp/types/numeric_limits/epsilon
+/**
+ * @brief almost_equal template function 
+ * 
+ * @tparam T 
+ * @param x 
+ * @param y 
+ * @param ulp 
+ * @return std::enable_if<!std::numeric_limits<T>::is_integer, bool>::type 
+ */
 template<class T>
 typename std::enable_if<!std::numeric_limits<T>::is_integer, bool>::type
     almost_equal(T x, T y, int ulp)
@@ -25,10 +38,14 @@ typename std::enable_if<!std::numeric_limits<T>::is_integer, bool>::type
         || std::fabs(x-y) < std::numeric_limits<T>::min();
 }
 
-// The Pvector class implements Euclidian vectors -- that is, each vector has
-// both a magnitude and a direction. We use Pvectors for implementing movement
-// and the three Boid rules -- cohesion, separation, and matching velocity
-// through the use of acceleration, force, and velocity vectors.
+
+/**
+ * @brief The Pvector class implements Euclidian vectors - that is, each vector has
+ * both a magnitude and a direction. We use Pvectors for implementing movement
+ * and the three Boid rules -- cohesion, separation, and matching velocity
+ * through the use of acceleration, force, and velocity vectors.
+ * 
+ */
 class Pvector {
 
 public:
@@ -78,5 +95,3 @@ public:
 
 	static Pvector copy(Pvector v);
 };
-
-#endif

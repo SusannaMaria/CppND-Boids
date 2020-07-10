@@ -27,13 +27,16 @@ class AltSpriteHolder : public sf::Drawable
 {
 
 public:
-    AltSpriteHolder(const unsigned amount);
+
+
+    AltSpriteHolder();
     AltSpriteHolder(sf::Texture &T, const unsigned amount);
     ~AltSpriteHolder();
 
     AltSpriteHolder(const AltSpriteHolder &other);
     AltSpriteHolder &operator=(const AltSpriteHolder &other);
 
+    unsigned int addSprite();
     void setTexture(sf::Texture &T);
 
     void setTextureRect(const unsigned index, const sf::IntRect &IR);
