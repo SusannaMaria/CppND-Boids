@@ -4,6 +4,7 @@
 #include "Boid.h"
 #include "SFML/Graphics.hpp"
 #include <thread>
+#include "config.hpp"
 #ifndef FLOCK_H_
 #define FLOCK_H_
 
@@ -19,12 +20,13 @@ public:
 	//Constructors
 	Flock(){};
 	
+	std::shared_ptr<BoidConfig> _config;
 
 	//vector<Boid> flock;
 	// Accessor functions
 	int getSize() const;
 	Boid getBoid(int i);
-	void init(int width, int height);
+	void init(int width, int height,std::shared_ptr<BoidConfig> config);
 	// Mutator Functions
 	void addBoid(Boid b);
 	void flocking();

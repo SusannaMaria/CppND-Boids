@@ -57,7 +57,7 @@ public:
 	 * @param y initialize with y-Position
 	 * @param predCheck Predator will have higher speeds
 	 */
-	Boid(float x, float y, bool predCheck, int unsigned spritenr);
+	Boid(float x, float y, bool predCheck, int unsigned spritenr,float desSep, float desAli, float desCoh, float sepW, float aliW, float cohW, float theta);
 
 	/**
 	 * @brief Adds force Pvector to current force Pvector

@@ -24,7 +24,7 @@ private:
 	sf::RenderWindow _window;
 	int _window_width;
 	int _window_height;
-	std::unique_ptr<BoidConfig> _config;
+	std::shared_ptr<BoidConfig> _config;
 	shared_ptr<AltSpriteHolder> ASH;
 	shared_ptr<AltSpriteHolder> RED;
 

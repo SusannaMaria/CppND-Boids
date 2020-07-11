@@ -7,8 +7,9 @@
 // ======== Flock Functions from Flock.h ========= //
 // =============================================== //
 
-void Flock::init(int width, int height)
+void Flock::init(int width, int height, std::shared_ptr<BoidConfig> config)
 {
+	_config = config;
 	_window_width = width;
 	_window_height = height;
 
@@ -17,15 +18,6 @@ void Flock::init(int width, int height)
 		vector<shared_ptr<Boid>> ele;
 		sortboids.push_back(ele);
 	}
-
-	// func_pool = new Function_pool();
-
-	// int num_threads = std::thread::hardware_concurrency();
-
-	// for (int i = 0; i < num_threads; i++)
-	// {
-	// 	thread_pool.push_back(std::thread(&Function_pool::infinite_loop_func, func_pool));
-	// }
 }
 
 int Flock::getSize() const { return _flockvect.size(); }
@@ -34,7 +26,7 @@ int Flock::getSize() const { return _flockvect.size(); }
 
 void Flock::addBoid(float x, float y, bool predStatus, int unsigned spritenr)
 {
-	std::shared_ptr<Boid> bu = std::make_shared<Boid>(x, y, predStatus, spritenr);
+	std::shared_ptr<Boid> bu = std::make_shared<Boid>(x, y, predStatus, spritenr, _config->BP("desSep"), _config->BP("desAli"), _config->BP("desCoh"), _config->BP("sepW"), _config->BP("aliW"), _config->BP("cohW"), _config->BP("theta"));
 	_flockvect.push_back(bu);
 }
 
@@ -80,11 +72,10 @@ void Flock::flockit()
 {
 	for (int i = 0; i < 12; i++)
 	{
-		std::function<void()> doThing = std::bind(&Flock::flockingsort, this,i);
+		std::function<void()> doThing = std::bind(&Flock::flockingsort, this, i);
 		tp.enqueue(doThing);
 	}
 	tp.waitFinished();
-
 }
 
 void Flock::flockingsortall()

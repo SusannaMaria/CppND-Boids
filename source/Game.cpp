@@ -8,7 +8,6 @@
 
 #include <fstream>
 
-#define BOID_AMOUNT 800
 #include <unistd.h>
 #define GetCurrentDir getcwd
 using namespace std;
@@ -18,8 +17,9 @@ float Pi{3.141529};
 // Construct window using SFML
 	Game::Game()
 {
-	_config = std::make_unique<BoidConfig>();
+	_config = std::make_shared<BoidConfig>();
 
+	_multithreaded = _config->Multithreaded();
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 	this->_window_height = desktop.height;
 	this->_window_width = desktop.width;
@@ -27,7 +27,7 @@ float Pi{3.141529};
 
 	printInstructions();
 	srand((int)time(0));
-	flock.init(_window_width, _window_height);
+	flock.init(_window_width, _window_height,_config);
 	f_uistatsfont.loadFromFile(_config->FontLocation());
 }
 
@@ -70,7 +70,7 @@ void Game::Run()
 	M_red = std::make_shared<sf::Sprite>(T_red);
 	RED->setTexture(T_red);
 
-	for (int i = 0; i < BOID_AMOUNT; i++)
+	for (int i = 0; i < _config->AmountPrey(); i++)
 	{
 		unsigned int spritenr = ASH->addSprite();
 		createBoid(_window_width / 2, _window_height / 2, false, spritenr);

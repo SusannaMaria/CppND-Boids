@@ -47,7 +47,7 @@ Boid::Boid(float x, float y): predatorStatus(false)
  * @param y 
  * @param predCheck 
  */
-Boid::Boid(float x, float y, bool predCheck, int unsigned spritenr)
+Boid::Boid(float x, float y, bool predCheck, int unsigned spritenr, float desSep, float desAli, float desCoh, float sepW, float aliW, float cohW, float theta)
 {
 	predatorStatus = predCheck;
 	if (predCheck == true) {
@@ -63,13 +63,13 @@ Boid::Boid(float x, float y, bool predCheck, int unsigned spritenr)
 	acceleration = Pvector(0, 0);
 	location = Pvector(x, y);
 
-	desSep = 20;
-	desAli = 70;
-	desCoh = 25;
-	sepW = 1.5;
-	aliW = 1.0;
-	cohW = 1.0;
-	theta = 0.0;
+	this->desSep = desSep;
+	this->desAli = desAli;
+	this->desCoh = desCoh;
+	this->sepW = sepW;
+	this->aliW = aliW;
+	this->cohW = cohW;
+	this->theta = theta;
 	this->spritenr =spritenr;
 }
 
