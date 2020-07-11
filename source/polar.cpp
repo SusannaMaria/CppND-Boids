@@ -1,4 +1,4 @@
-#include "PolarVector.hpp"
+#include "polarvector.hpp"
 #include <cmath>
 
 const float PolarVector::EPSILON = 0.0001;

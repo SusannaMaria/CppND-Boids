@@ -11,7 +11,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <vector>
-#include "Boid.h"
+#include "boid.hpp"
 #include "SFML/Window.hpp"
 
 // Global Variables for borders()

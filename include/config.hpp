@@ -1,6 +1,6 @@
 #pragma once
 
-#include "cpptoml.h"
+#include "cpptoml.hpp"
 
 
 class BoidConfig{

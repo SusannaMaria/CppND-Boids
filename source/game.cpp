@@ -1,8 +1,8 @@
-#include "Flock.h"
-#include "Game.h"
+#include "flock.hpp"
+#include "game.hpp"
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
-#include "ObstaclesContainer.hpp"
+#include "obstaclescontainer.hpp"
 #include <iostream>
 #include <memory>
 
@@ -214,9 +214,9 @@ void Game::HandleInput()
 			event.key.code == sf::Keyboard::F5)
 		{
 			_window.close();
-			// Game temp = Game(_config);
-			// ;
-			// temp.Run();
+			Game temp = Game();
+			;
+			temp.Run();
 		}
 	}
 

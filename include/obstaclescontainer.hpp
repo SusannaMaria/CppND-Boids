@@ -2,7 +2,7 @@
 
 #include <vector>
 #include "obstacle.hpp"
-#include "Boid.h"
+#include "boid.hpp"
 
 #include <SFML/Graphics/Drawable.hpp>
 

@@ -3,8 +3,8 @@
 #include <cmath>
 #define PI 3.14159265
 #include <iostream>
-#include "Boid.h"
-#include "Pvector.h"
+#include "boid.hpp"
+#include "pvector.hpp"
 void Obstacle::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     states.texture = NULL;

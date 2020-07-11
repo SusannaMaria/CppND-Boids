@@ -19,7 +19,7 @@ option(PACKAGE_TESTS "Build the tests" ON)
 if(PACKAGE_TESTS)
 add_subdirectory(googletest)
 # Add the testing executable
-add_executable(test test/test_distance.cpp source/obstacle.cpp source/Pvector.cpp)
+add_executable(test test/test_distance.cpp source/obstacle.cpp source/pvector.cpp)
 
 target_link_libraries(test 
     gtest_main 
@@ -30,20 +30,17 @@ target_link_libraries(test
 
 endif()
 
-find_package(PkgConfig)
-pkg_check_modules(LIBCONFIG_PLUSPLUS libconfig++ REQUIRED)
-
 find_package(OpenGL)
 find_package(GLUT)
 
 FOREACH(MODULE source include)
-  FILE(GLOB MODULES_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/${MODULE}/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/${MODULE}/*.h)
+  FILE(GLOB MODULES_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/${MODULE}/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/${MODULE}/*.hpp)
   SET(SOURCES ${MODULES_SOURCES} ${SOURCES})
 ENDFOREACH(MODULE)
 
 ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCES} ${VERSION_FILE})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}  sfml-window sfml-system sfml-graphics    ${OPENGL_gl_LIBRARY}
-${GLUT_LIBRARIES} ${LIBCONFIG_PLUSPLUS_LIBRARIES})
+${GLUT_LIBRARIES})
   #${SFML_LIBRARIES})
 
 

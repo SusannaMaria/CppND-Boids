@@ -4,7 +4,7 @@
 #include <unistd.h>
 #define GetCurrentDir getcwd
 
-#include "cpptoml.h"
+#include "cpptoml.hpp"
 #include <filesystem>
 using namespace std;
 
@@ -34,19 +34,16 @@ BoidConfig::BoidConfig()
 		}
 		catch (const cpptoml::parse_exception &e)
 		{
-			std::cerr << "Failed to parse " << loc + cfgfile << std::endl;
+			continue;
 		}
 	}
 
-	// std::string_view main_version = config->get("version")->value_or("empty"sv);
-
-	// cout << "df";
-	// cout << (*config.get())["root"]["version"]<< endl;
-
 	if (_config.get() == nullptr)
 	{
-
 		auto path = curlocation + cfgfile;
+		
+		std::cerr << "Failed to parse config, create: " << path << std::endl;
+
 		ofstream ofs(path);
 
 		if (!ofs)

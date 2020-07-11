@@ -1,7 +1,7 @@
 // #include "function_pool.h"
-#include "threadpool.h"
+#include "threadpool.hpp"
 #include <vector>
-#include "Boid.h"
+#include "boid.hpp"
 #include "SFML/Graphics.hpp"
 #include <thread>
 #include "config.hpp"

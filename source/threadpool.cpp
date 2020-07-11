@@ -7,7 +7,7 @@
 #include <mutex>
 #include <random>
 #include <atomic>
-#include "threadpool.h"
+#include "threadpool.hpp"
 
 ThreadPool::ThreadPool(unsigned int n)
     : busy()

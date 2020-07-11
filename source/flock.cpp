@@ -1,7 +1,6 @@
-#include "Boid.h"
-#include "Flock.h"
-//#include "function_pool.h"
-#include "threadpool.h"
+#include "boid.hpp"
+#include "flock.hpp"
+#include "threadpool.hpp"
 
 // =============================================== //
 // ======== Flock Functions from Flock.h ========= //

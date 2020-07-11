@@ -1,5 +1,5 @@
-#include "AltSpriteHolder.hpp"
-#include "PolarVector.hpp"
+#include "altspriteholder.hpp"
+#include "polarvector.hpp"
 #include <cmath>
 #include <iostream>
 

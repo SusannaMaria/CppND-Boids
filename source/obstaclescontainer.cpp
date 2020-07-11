@@ -1,4 +1,4 @@
-#include "ObstaclesContainer.hpp"
+#include "obstaclescontainer.hpp"
 
 #define OBSTACLE_AMOUNT 5
 

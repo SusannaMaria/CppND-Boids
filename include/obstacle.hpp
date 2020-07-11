@@ -8,7 +8,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
-#include "Pvector.h"
+#include "pvector.hpp"
 #include <memory>
 class Boid;
 class Obstacle : public sf::Drawable

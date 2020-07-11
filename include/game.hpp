@@ -1,10 +1,10 @@
-#include "Flock.h"
+#include "flock.hpp"
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
-#include "AltSpriteHolder.hpp"
-#include "PolarVector.hpp"
+#include "altspriteholder.hpp"
+#include "polarvector.hpp"
 #include "obstacle.hpp"
-#include "ObstaclesContainer.hpp"
+#include "obstaclescontainer.hpp"
 #include "config.hpp"
 #ifndef GAME_H
 #define GAME_H
