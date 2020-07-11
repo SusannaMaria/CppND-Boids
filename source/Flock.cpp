@@ -117,7 +117,6 @@ void Flock::flockingsort(int i)
 			}
 		}
 	}
-	cout << "end"<<i<<endl;
 }
 
 // Runs the run function for every boid in the flock checking against the flock

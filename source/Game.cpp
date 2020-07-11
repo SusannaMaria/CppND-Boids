@@ -6,6 +6,8 @@
 #include <iostream>
 #include <memory>
 
+#include <fstream>
+
 #define BOID_AMOUNT 800
 #include <unistd.h>
 #define GetCurrentDir getcwd
@@ -13,18 +15,11 @@ using namespace std;
 
 float Pi{3.141529};
 
-std::string get_current_dir()
-{
-	char buff[FILENAME_MAX]; //create string buffer to hold path
-	GetCurrentDir(buff, FILENAME_MAX);
-	string current_working_dir(buff);
-	return current_working_dir;
-}
-
 // Construct window using SFML
-Game::Game()
+	Game::Game()
 {
-	//this->boidsSize = rand() % 10 - 3;
+	_config = std::make_unique<BoidConfig>();
+
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 	this->_window_height = desktop.height;
 	this->_window_width = desktop.width;
@@ -32,24 +27,41 @@ Game::Game()
 
 	printInstructions();
 	srand((int)time(0));
-	flock.init(_window_width,_window_height);
+	flock.init(_window_width, _window_height);
+	f_uistatsfont.loadFromFile(_config->FontLocation());
 }
 
 Game::~Game()
 {
 }
 
-// Run the simulation. Run creates the boids that we'll display, checks for user
-// input, and updates the view
+void Game::addUiStat(int xpos, string text)
+{
+
+	int nr = _uistats.size();
+	std::shared_ptr<sf::Text> eleText = std::make_shared<sf::Text>(text, f_uistatsfont);
+
+	eleText->setFillColor(sf::Color::White);
+	eleText->setCharacterSize(12);
+	eleText->setPosition(_window_width - xpos, nr * 12);
+
+	_uistatstext.push_back(text);
+	_uistats.push_back(eleText);
+}
+
+/**
+ * @brief Run the simulation. Run creates the boids that we'll display, checks for user input, and updates the view
+ * 
+ */
 void Game::Run()
 {
 
 	ASH = std::make_shared<AltSpriteHolder>();
 	RED = std::make_shared<AltSpriteHolder>();
 
-	if (!T.loadFromFile(get_current_dir() + "/../assets/fly16x16.png")) ///Change the path as needed.
+	if (!T.loadFromFile(_config->PreySprite()))
 		exit(1);
-	if (!T_red.loadFromFile(get_current_dir() + "/../assets/fly16x16_red.png")) ///Change the path as needed.
+	if (!T_red.loadFromFile(_config->PredSprite()))
 		exit(1);
 
 	M = std::make_shared<sf::Sprite>(T);
@@ -64,75 +76,32 @@ void Game::Run()
 		createBoid(_window_width / 2, _window_height / 2, false, spritenr);
 	}
 
-	obstacles = std::make_shared<ObstaclesContainer>(_window_width,_window_height,50);
+	obstacles = std::make_shared<ObstaclesContainer>(_window_width, _window_height, 50);
 
-	//Whole block of text can probably simplified in a function as well in order to remove redundancy
-	sf::Font font;
-	font.loadFromFile(get_current_dir() + "/../assets/consola.ttf");
-
-	sf::Text fpsText("Frames per Second: ", font);
-	fpsText.setFillColor(sf::Color::White);
-	fpsText.setCharacterSize(12);
-	fpsText.setPosition(_window_width - 162, 0);
-
-	sf::Text preyText("Total Prey Count: " + to_string(flock.preyCount()), font);
-	preyText.setFillColor(sf::Color::White);
-	preyText.setCharacterSize(12);
-	preyText.setPosition(_window_width - 155, 12);
-
-	sf::Text predText("Total Predator Count: " + to_string(flock.predCount()), font);
-	predText.setFillColor(sf::Color::White);
-	predText.setCharacterSize(12);
-	predText.setPosition(_window_width - 183, 24);
-
-	sf::Text boidText("Total Boid Count: " + to_string(flock.getSize()), font);
-	boidText.setFillColor(sf::Color::White);
-	boidText.setCharacterSize(12);
-	boidText.setPosition(_window_width - 155, 36);
-
-	sf::Text dSepText("Separation Amount: " + to_string(flock.getBoidPtr(0)->DesSep()), font);
-	dSepText.setFillColor(sf::Color::White);
-	dSepText.setCharacterSize(12);
-	dSepText.setPosition(_window_width - 162, 60);
-
-	sf::Text dAliText("Alignment Amount: " + to_string(flock.getBoidPtr(0)->DesAli()), font);
-	dAliText.setFillColor(sf::Color::White);
-	dAliText.setCharacterSize(12);
-	dAliText.setPosition(_window_width - 155, 72);
-
-	sf::Text dCohText("Cohesion Amount: " + to_string(flock.getBoidPtr(0)->DesCoh()), font);
-	dCohText.setFillColor(sf::Color::White);
-	dCohText.setCharacterSize(12);
-	dCohText.setPosition(_window_width - 148, 84);
-
-	sf::Text dSepWText("Separation Weight: " + to_string(flock.getBoidPtr(0)->SepW()), font);
-	dSepWText.setFillColor(sf::Color::White);
-	dSepWText.setCharacterSize(12);
-	dSepWText.setPosition(_window_width - 162, 108);
-
-	sf::Text dAliWText("Alignment Weight: " + to_string(flock.getBoidPtr(0)->AliW()), font);
-	dAliWText.setFillColor(sf::Color::White);
-	dAliWText.setCharacterSize(12);
-	dAliWText.setPosition(_window_width - 155, 120);
-
-	sf::Text dCohWText("Cohesion Weight: " + to_string(flock.getBoidPtr(0)->CohW()), font);
-	dCohWText.setFillColor(sf::Color::White);
-	dCohWText.setCharacterSize(12);
-	dCohWText.setPosition(_window_width - 148, 132);
+	addUiStat(162, "Frames per Second: ");
+	addUiStat(155, "Total Prey Count: ");
+	addUiStat(183, "Total Predator Count: ");
+	addUiStat(155, "Total Boid Count: ");
+	addUiStat(162, "Separation Amount: ");
+	addUiStat(155, "Alignment Amount: ");
+	addUiStat(148, "Cohesion Amount: ");
+	addUiStat(162, "Separation Weight: ");
+	addUiStat(155, "Alignment Weight: ");
+	addUiStat(148, "Cohesion Weight: ");
+	addUiStat(148, "Flocking(ms): ");
 
 	// Clock added to calculate frame rate, may cause a small amount of slowdown?
 	sf::Clock clock;
-	_window.setFramerateLimit(120); //
+	_window.setFramerateLimit(120); // Limit the framerate to 120 fps
 
-	unsigned int counter=0;
+	unsigned int counter = 0;
 	while (_window.isOpen())
 	{
 		float currentTime = clock.restart().asSeconds();
 		float fps = 1 / currentTime; // 1 / refresh time = estimate of fps
 		HandleInput();
 		counter++;
-		Render(fpsText, fps, preyText, predText, boidText,
-			   dSepText, dAliText, dCohText, dSepWText, dAliWText, dCohWText, counter);
+		Render(fps, counter);
 	}
 }
 
@@ -236,12 +205,18 @@ void Game::HandleInput()
 		}
 
 		if (event.type == sf::Event::KeyPressed &&
+			event.key.code == sf::Keyboard::M)
+		{
+			_multithreaded = !_multithreaded;
+		}
+
+		if (event.type == sf::Event::KeyPressed &&
 			event.key.code == sf::Keyboard::F5)
 		{
 			_window.close();
-			Game temp;
-			;
-			temp.Run();
+			// Game temp = Game(_config);
+			// ;
+			// temp.Run();
 		}
 	}
 
@@ -263,42 +238,28 @@ void Game::createBoid(float x, float y, bool predStatus, int unsigned spritenr)
 	// flock.addBoid(b);
 }
 
+void Game::updateUiStat(int id, float value)
+{
+	_uistats[id]->setString(_uistatstext[id] + to_string(int(value)));
+	_window.draw(*_uistats[id]);
+}
+
 //Method of passing text needs refactoring
-void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predText, sf::Text boidText,
-				  sf::Text dSepText, sf::Text dAliText, sf::Text dCohText, sf::Text dSepWText, sf::Text dAliWText, sf::Text dCohWText,  unsigned int counter)
+void Game::Render(float fps, unsigned int counter)
 {
 	_window.clear();
 
-	//Updating and drawing text can possibly be put in it's own function as well
-	fpsText.setString("Frames per Second: " + to_string(int(fps + 0.5)));
-	_window.draw(fpsText);
-
-	preyText.setString("Total Prey Count: " + to_string(flock.preyCount()));
-	_window.draw(preyText);
-
-	predText.setString("Total Predator Count: " + to_string(flock.predCount()));
-	_window.draw(predText);
-
-	boidText.setString("Total Boid Count: " + to_string(flock.getSize()));
-	_window.draw(boidText);
-
-	dSepText.setString("Separation Amount: " + to_string(int(flock.getBoidPtr(0)->DesSep() + 0.5)));
-	_window.draw(dSepText);
-
-	dAliText.setString("Alignment Amount: " + to_string(int(flock.getBoidPtr(0)->DesAli() + 0.5)));
-	_window.draw(dAliText);
-
-	dCohText.setString("Cohesion Amount: " + to_string(int(flock.getBoidPtr(0)->DesCoh() + 0.5)));
-	_window.draw(dCohText);
-
-	dSepWText.setString("Separation Weight: " + to_string(flock.getBoidPtr(0)->SepW()));
-	_window.draw(dSepWText);
-
-	dAliWText.setString("Alignment Weight: " + to_string(flock.getBoidPtr(0)->AliW()));
-	_window.draw(dAliWText);
-
-	dCohWText.setString("Cohesion Weight: " + to_string(flock.getBoidPtr(0)->CohW()));
-	_window.draw(dCohWText);
+	updateUiStat(0, fps + 0.5);
+	updateUiStat(1, flock.preyCount());
+	updateUiStat(2, flock.predCount());
+	updateUiStat(3, flock.getSize());
+	updateUiStat(4, flock.getBoidPtr(0)->DesSep() + 0.5);
+	updateUiStat(5, flock.getBoidPtr(0)->DesAli() + 0.5);
+	updateUiStat(6, flock.getBoidPtr(0)->DesCoh() + 0.5);
+	updateUiStat(7, flock.getBoidPtr(0)->SepW());
+	updateUiStat(8, flock.getBoidPtr(0)->AliW());
+	updateUiStat(9, flock.getBoidPtr(0)->CohW());
+	updateUiStat(10, _durationofflocking / 1000);
 
 	// Draws all of the Boids out, and applies functions that are needed to update.
 	for (int i = 0; i < flock.getSize(); i++)
@@ -318,7 +279,6 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 			RED->rotateAroundSelf(flock.getBoidPtr(i)->Spritenr(), diff, true);
 		}
 		else
-
 		{
 			ASH->setPosition(flock.getBoidPtr(i)->Spritenr(), flock.getBoidPtr(i)->location.x, flock.getBoidPtr(i)->location.y);
 
@@ -328,11 +288,19 @@ void Game::Render(sf::Text fpsText, float fps, sf::Text preyText, sf::Text predT
 			ASH->rotateAroundSelf(flock.getBoidPtr(i)->Spritenr(), diff, true);
 		}
 	}
-	flock.sort(_window_width,_window_height);
-	//flock.flockingsortall();
-	//flock.flocking();
-	flock.flockit();
-	
+	auto t1 = std::chrono::high_resolution_clock::now();
+
+	if (_multithreaded)
+	{
+		flock.sort(_window_width, _window_height);
+		flock.flockit();
+	}
+	else
+	{
+		flock.flocking();
+	}
+	auto t2 = std::chrono::high_resolution_clock::now();
+	_durationofflocking = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
 
 	_window.draw(*ASH);
 	_window.draw(*RED);
@@ -356,6 +324,7 @@ void Game::printInstructions()
 	cout << "Press 'K' to decrease Alignment Weight" << endl;
 	cout << "Press 'P' to increase Alignment Weight" << endl;
 	cout << "Press 'L' to decrease Alignment Weight" << endl;
+	cout << "Press 'M' to switch between Multi und Singlethreaded" << endl;
 	cout << "Press 'Space' to add a prey Boid in a random spot" << endl;
 	cout << "Left Click to add a predator Boid where you clicked" << endl;
 	cout << "Press 'F5' to restart the simulation" << endl;

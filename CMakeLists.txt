@@ -25,11 +25,13 @@ target_link_libraries(test
     gtest_main 
     sfml-window sfml-system sfml-graphics    ${OPENGL_gl_LIBRARY}
     ${GLUT_LIBRARIES} 
+    ${LIBCONFIG_PLUSPLUS_LIBRARIES}
 )
 
 endif()
 
-ADD_EXECUTABLE(mtt ${CMAKE_CURRENT_SOURCE_DIR}/multithread/function_pool.cpp ${CMAKE_CURRENT_SOURCE_DIR}/multithread/main.cpp)
+find_package(PkgConfig)
+pkg_check_modules(LIBCONFIG_PLUSPLUS libconfig++ REQUIRED)
 
 find_package(OpenGL)
 find_package(GLUT)
@@ -41,7 +43,7 @@ ENDFOREACH(MODULE)
 
 ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCES} ${VERSION_FILE})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}  sfml-window sfml-system sfml-graphics    ${OPENGL_gl_LIBRARY}
-${GLUT_LIBRARIES} )
+${GLUT_LIBRARIES} ${LIBCONFIG_PLUSPLUS_LIBRARIES})
   #${SFML_LIBRARIES})
 
 
