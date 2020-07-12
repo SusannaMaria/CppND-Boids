@@ -1,6 +1,6 @@
 /**
- * @file Boid.cpp
- * @author 	Jorge Yanar(https://github.com/jyanar), Susanna Hepp (https://github.com/SusannaMaria)
+ * @file boid.cpp.cpp
+ * @author Jorge Yanar(https://github.com/jyanar), Susanna Hepp (https://github.com/SusannaMaria)
  * @brief Boid Functions
  * @version 1.0
  * @date 2020-07-10

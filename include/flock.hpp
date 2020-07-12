@@ -4,7 +4,7 @@
 #include "boid.hpp"
 #include "SFML/Graphics.hpp"
 #include <thread>
-#include "config.hpp"
+#include "boidconfig.hpp"
 #ifndef FLOCK_H_
 #define FLOCK_H_
 

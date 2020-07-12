@@ -1,5 +1,5 @@
 /**
- * @file AltSpriteHolder.hpp
+ * @file altspriteholder.hpp
  * @author https://www.sfml-dev.org (https://github.com/SFML/SFML/wiki/Source%3A-High-Performance-Sprite-Container)
  * @brief High Performance Sprite Container
  * @version 1.0
@@ -27,7 +27,6 @@ class AltSpriteHolder : public sf::Drawable
 {
 
 public:
-
 
     AltSpriteHolder();
     AltSpriteHolder(sf::Texture &T, const unsigned amount);

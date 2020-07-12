@@ -1,3 +1,13 @@
+/**
+ * @file altspriteholder.cpp
+ * @author https://www.sfml-dev.org (https://github.com/SFML/SFML/wiki/Source%3A-High-Performance-Sprite-Container)
+ * @brief High Performance Sprite Container
+ * @version 1.0
+ * @date 2013-01-18
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
 #include "altspriteholder.hpp"
 #include "polarvector.hpp"
 #include <cmath>

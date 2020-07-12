@@ -5,7 +5,7 @@
 #include "polarvector.hpp"
 #include "obstacle.hpp"
 #include "obstaclescontainer.hpp"
-#include "config.hpp"
+#include "boidconfig.hpp"
 #ifndef GAME_H
 #define GAME_H
 
