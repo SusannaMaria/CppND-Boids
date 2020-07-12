@@ -5,6 +5,12 @@
 #include <iostream>
 #include "boid.hpp"
 #include "pvector.hpp"
+/**
+ * @brief draw function
+ * 
+ * @param target 
+ * @param states 
+ */
 void Obstacle::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     states.texture = NULL;
@@ -14,75 +20,32 @@ void Obstacle::draw(sf::RenderTarget &target, sf::RenderStates states) const
 void Obstacle::avoid(shared_ptr<Boid> boid)
 {
     float steerAngle = 0.0;
-    float ax;
-    float ay;
-    float theta;
 
     Pvector obspos{m_circle.getPosition().x, m_circle.getPosition().y};
 
-    float distance = obspos.distance(boid->location);
+    float distance = obspos.distance(boid->Location());
 
     if (distance < 2 * _detectionradius)
     {
 
-        Pvector distvec = Pvector::subTwoVector(obspos, boid->location);
+        Pvector distvec = Pvector::subTwoVector(obspos, boid->Location());
 
-        float dotproduct = distvec.dotProduct(boid->velocity);
+        float dotproduct = distvec.dotProduct(boid->Velocity());
 
         if (dotproduct > 0.0)
         {
             float tangentAngle = asin(_detectionradius / distance);
 
-            float directionAngle = acos(dotproduct / (distance * boid->velocity.magnitude()));
+            float directionAngle = acos(dotproduct / (distance * boid->Velocity().magnitude()));
 
             if (directionAngle < tangentAngle)
                 steerAngle += (tangentAngle - directionAngle);
         }
     }
     Pvector result;
-    Pvector velold = boid->velocity;
+    Pvector velold = boid->Velocity();
     result.x = velold.x * cos(steerAngle) + velold.y * sin(steerAngle);
     result.y = -1 * velold.x * sin(steerAngle) + velold.y * cos(steerAngle);
 
-    boid->velocity = result;
-}
-
-void Obstacle::avoid(Boid &boid)
-{
-    float steerAngle = 0.0;
-    float ax;
-    float ay;
-    float theta;
-
-    Pvector obspos{m_circle.getPosition().x, m_circle.getPosition().y};
-
-    float distance = obspos.distance(boid.location);
-
-    if (distance < 2 * _detectionradius)
-    {
-
-        Pvector distvec = Pvector::subTwoVector(obspos, boid.location);
-
-        float dotproduct = distvec.dotProduct(boid.velocity);
-
-        if (dotproduct > 0.0)
-        {
-            float tangentAngle = asin(_detectionradius / distance);
-
-            float directionAngle = acos(dotproduct / (distance * boid.velocity.magnitude()));
-
-            if (directionAngle < tangentAngle)
-                steerAngle += (tangentAngle - directionAngle);
-        }
-    }
-    if (almost_equal(steerAngle, 0.f, 2)){
-        return;
-    }
-
-    Pvector result;
-    Pvector velold = boid.velocity;
-    result.x = velold.x * cos(steerAngle) + velold.y * sin(steerAngle);
-    result.y = -1 * velold.x * sin(steerAngle) + velold.y * cos(steerAngle);
-
-    boid.velocity = result;
+    boid->Velocity(result);
 }

@@ -59,22 +59,6 @@ BoidConfig::BoidConfig()
 			cout << "Error writing default config file" << endl;
 			exit(1);
 		}
-		// Default configuration
-		const char *toml_config = R"TOMLCONFIG([boids]
-version = 1.0
-uistatfont = "assets/consola.ttf"
-preysprite = "assets/fly16x16.png"
-predsprite = "assets/fly16x16_red.png"
-multithreaded = true
-amountprey = 1000
-desSep = 20.0
-desAli = 70.0
-desCoh = 25.0
-sepW = 1.5
-aliW = 1.0
-cohW = 1.0
-theta = 0.0
-			)TOMLCONFIG";
 		// autogeneration of absolute rootpath
 		ofs << toml_config << endl
 			<< "rootpath = \"" << curlocation << "/..\"";

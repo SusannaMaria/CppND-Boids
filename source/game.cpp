@@ -1,14 +1,15 @@
-#include "flock.hpp"
-#include "game.hpp"
-#include "SFML/Window.hpp"
-#include "SFML/Graphics.hpp"
-#include "obstaclescontainer.hpp"
 #include <iostream>
 #include <memory>
-
 #include <fstream>
-
 #include <unistd.h>
+
+#include "SFML/Window.hpp"
+#include "SFML/Graphics.hpp"
+
+#include "obstaclescontainer.hpp"
+#include "flock.hpp"
+#include "game.hpp"
+
 #define GetCurrentDir getcwd
 using namespace std;
 
@@ -21,6 +22,7 @@ float Pi{3.141529};
 
 	_multithreaded = _config->Multithreaded();
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+
 	this->_window_height = desktop.height;
 	this->_window_width = desktop.width;
 	this->_window.create(sf::VideoMode(_window_width, _window_height, desktop.bitsPerPixel), "Boids", sf::Style::None);
@@ -28,9 +30,10 @@ float Pi{3.141529};
 	printInstructions();
 	srand((int)time(0));
 
+	// Flocking object
 	flock = std::make_shared<Flock>();
-
 	flock->init(_window_width, _window_height,_config);
+
 	f_uistatsfont.loadFromFile(_config->FontLocation());
 }
 
@@ -272,9 +275,9 @@ void Game::Render(float fps, unsigned int counter)
 
 		obstacles->avoid(flock->getBoidPtr(i));
 
-		if (flock->getBoidPtr(i)->predatorStatus)
+		if (flock->getBoidPtr(i)->PredatorStatus())
 		{
-			RED->setPosition(flock->getBoidPtr(i)->Spritenr(), flock->getBoidPtr(i)->location.x, flock->getBoidPtr(i)->location.y);
+			RED->setPosition(flock->getBoidPtr(i)->Spritenr(), flock->getBoidPtr(i)->Location().x, flock->getBoidPtr(i)->Location().y);
 
 			// Calculates the angle where the velocity is pointing so that the triangle turns towards it.
 			float diff = -flock->getBoidPtr(i)->updateThetaGetDiff();
@@ -283,7 +286,7 @@ void Game::Render(float fps, unsigned int counter)
 		}
 		else
 		{
-			ASH->setPosition(flock->getBoidPtr(i)->Spritenr(), flock->getBoidPtr(i)->location.x, flock->getBoidPtr(i)->location.y);
+			ASH->setPosition(flock->getBoidPtr(i)->Spritenr(), flock->getBoidPtr(i)->Location().x, flock->getBoidPtr(i)->Location().y);
 
 			// Calculates the angle where the velocity is pointing so that the triangle turns towards it.
 			float diff = -flock->getBoidPtr(i)->updateThetaGetDiff();

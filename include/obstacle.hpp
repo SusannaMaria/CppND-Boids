@@ -14,21 +14,18 @@ class Boid;
 class Obstacle : public sf::Drawable
 {
 public:
-    Obstacle(float ax=0.f, float ay=0.f, float radius=100.f, size_t pointcloud=10):m_circle(radius, pointcloud ),_detectionradius{radius*2}{
+    Obstacle(float ax = 0.f, float ay = 0.f, float radius = 100.f, size_t pointcloud = 20) : m_circle(radius, pointcloud), _detectionradius{radius * 3}
+    {
         m_circle.setPosition(ax, ay);
-        m_circle.setOrigin(radius,radius);
+        m_circle.setOrigin(radius, radius);
+        m_circle.setFillColor(sf::Color(150, 50, 250));
+        m_circle.setOutlineThickness(3);
+        m_circle.setOutlineColor(sf::Color(250, 150, 100));
     }
     void avoid(shared_ptr<Boid> boid);
-    void avoid(Boid &boid);
-    bool doCollide(float distance);
-    bool doCollide(float ax, float ay, float theta);
-    float getDistance(float ax, float ay, float theta);
-    sf::CircleShape m_circle;
-    float _detectionradius;
-    float _fovdistance;
 
 private:
- virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-
-
+    virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
+    sf::CircleShape m_circle;
+    float _detectionradius;
 };

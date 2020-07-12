@@ -11,25 +11,10 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <vector>
-#include "flock.hpp"
-#include "boid.hpp"
 #include "SFML/Window.hpp"
 
-// Global Variables for borders()
-// desktopTemp gets screen resolution of PC running the program
-
-
-
-// Boid::Boid(float x, float y, int window_width, int window_height): predatorStatus(false)
-// {
-// 	acceleration = Pvector(0, 0);
-// 	velocity = Pvector(rand() % 3 - 2, rand() % 3 - 2);
-// 	location = Pvector(x, y);
-// 	maxSpeed = 3.5;
-// 	maxForce = 0.5;
-// 	sf::VideoMode desktopTemp = sf::VideoMode::getDesktopMode();
-
-// }
+#include "flock.hpp"
+#include "boid.hpp"
 
 /**
  * @brief Construct a new Boid:: Boid object
@@ -37,6 +22,7 @@
  * @param x 
  * @param y 
  * @param predCheck 
+ * @param spritenr
  */
 
 Boid::Boid(float x, float y, bool predCheck, int unsigned spritenr){
@@ -57,33 +43,6 @@ Boid::Boid(float x, float y, bool predCheck, int unsigned spritenr){
 	this->spritenr =spritenr;
 
 }
-// Boid::Boid(float x, float y, int window_width, int window_height, bool predCheck, int unsigned spritenr, float desSep, float desAli, float desCoh, float sepW, float aliW, float cohW, float theta)
-// {
-// 	predatorStatus = predCheck;
-// 	if (predCheck == true) {
-// 		maxSpeed = 7.5;
-// 		maxForce = 1.5;
-// 		velocity = Pvector(rand() % 5 - 1, rand() % 5 - 1);
-// 	}
-// 	else {
-// 		maxSpeed = 5.5;
-// 		maxForce = 0.5;
-// 		velocity = Pvector(rand() % 5 - 2, rand() % 5 - 2);
-// 	}
-// 	acceleration = Pvector(0, 0);
-// 	location = Pvector(x, y);
-
-// 	this->desSep = desSep;
-// 	this->desAli = desAli;
-// 	this->desCoh = desCoh;
-// 	this->sepW = sepW;
-// 	this->aliW = aliW;
-// 	this->cohW = cohW;
-// 	this->theta = theta;
-// 	this->spritenr =spritenr;
-// 	this->_window_height = window_height;
-// 	this->_window_width = window_width;		
-// }
 
 /**
  * @brief Adds force Pvector to current force Pvector
@@ -273,7 +232,11 @@ void Boid::run(vector<shared_ptr<Boid> > const &v){
 	borders();
 }
 
-
+/**
+ * @brief Perform flocking of subset of boids sorted before
+ * 
+ * @param v 
+ */
 void Boid::flock(vector<shared_ptr<Boid> > const &v)
 {
 	Pvector sep = Separation(v);
@@ -330,8 +293,3 @@ float Boid::updateThetaGetDiff(){
 	return diff;
 }
 
-unsigned int Boid::Spritenr() const {return spritenr;};
-
-Pvector Boid::Location()const { return location; }
-
-void Boid::Spritenr(unsigned int n) { spritenr = n; }

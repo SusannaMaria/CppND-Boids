@@ -53,8 +53,8 @@ void Flock::sort(int width, int height)
 	for (int i = 0; i < _flockvect.size(); i++)
 	{
 
-		int segidx = (int)floor(_flockvect[i]->location.x / xs);
-		int segidy = (int)floor(_flockvect[i]->location.y / ys);
+		int segidx = (int)floor(_flockvect[i]->Location().x / xs);
+		int segidy = (int)floor(_flockvect[i]->Location().y / ys);
 
 		if (segidx > 3)
 		{
@@ -96,7 +96,7 @@ void Flock::flockingsortall()
 		{
 			for (int k = 0; k < sortboids[i].size(); k++)
 			{
-				if (sortboids[i][j]->location.distance(sortboids[i][k]->location) <= abs(20)) // Not sure if distance is 1:1 with SFML window size or if it is even working
+				if (sortboids[i][j]->Location().distance(sortboids[i][k]->Location()) <= abs(20)) // Not sure if distance is 1:1 with SFML window size or if it is even working
 				{
 					sortboids[i][j]->run(sortboids[i]);
 				}
@@ -111,7 +111,7 @@ void Flock::flockingsort(int i)
 	{
 		for (int k = 0; k < sortboids[i].size(); k++)
 		{
-			if (sortboids[i][j]->location.distance(sortboids[i][k]->location) <= abs(20)) // Not sure if distance is 1:1 with SFML window size or if it is even working
+			if (sortboids[i][j]->Location().distance(sortboids[i][k]->Location()) <= abs(20)) // Not sure if distance is 1:1 with SFML window size or if it is even working
 			{
 				sortboids[i][j]->run(sortboids[i]);
 			}
@@ -128,7 +128,7 @@ void Flock::flocking()
 		//Only checks in a certain range instead of checking through the whole flock in an attempt to reduce time complexity
 		for (int j = 0; j < _flockvect.size(); j++)
 		{
-			if (_flockvect[i]->location.distance(_flockvect[j]->location) <= abs(20)) // Not sure if distance is 1:1 with SFML window size or if it is even working
+			if (_flockvect[i]->Location().distance(_flockvect[j]->Location()) <= abs(20)) // Not sure if distance is 1:1 with SFML window size or if it is even working
 			{
 				_flockvect[i]->run(_flockvect);
 			}
@@ -141,7 +141,7 @@ int Flock::preyCount()
 	int count = 0;
 	for (int i = 0; i < _flockvect.size(); i++)
 	{
-		if (!_flockvect[i]->predatorStatus)
+		if (!_flockvect[i]->PredatorStatus())
 			count++;
 	}
 	return count;

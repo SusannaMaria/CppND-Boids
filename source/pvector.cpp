@@ -1,40 +1,76 @@
+/**
+ * @file pvector.cpp
+ * @author your name (you@domain.com)
+ * @brief 
+ * @version 0.1
+ * @date 2020-07-12
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
+
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <math.h>
+
 #include "pvector.hpp"
 
 // =================================================== //
 // ======== Pvector Functions from Pvector.h ========= //
 // =================================================== //
 
-// Sets values of x and y for Pvector
+/**
+ * @brief Sets values of x and y for Pvector
+ * 
+ * @param i 
+ * @param o 
+ */
 void Pvector::set(float i, float o)
 {
 	x = i;
 	y = o;
 }
 
+/**
+ * @brief Add Vector to a Pvector
+ * 
+ * @param v 
+ */
 void Pvector::addVector(Pvector v)
 {
 	x += v.x;
 	y += v.y;
 }
  
-// Adds to a Pvector by a constant number
+/**
+ * @brief Adds to a Pvector by a constant number
+ * 
+ * @param s 
+ */
 void Pvector::addScalar(float s)
 {
 	x += s;
 	y += s;
 }
 
-// Subtracts 2 vectors
+/**
+ * @brief Subtracts 2 vectors
+ * 
+ * @param v 
+ */
 void Pvector::subVector(Pvector v)
 {
 	x -= v.x;
 	y -= v.y;
 }
 
-// Subtracts two vectors and returns the difference as a vector
+/**
+ * @brief Subtracts two vectors and returns the difference as a vector
+ * 
+ * @param v 
+ * @param v2 
+ * @return Pvector 
+ */
 Pvector Pvector::subTwoVector(Pvector v, Pvector v2)
 {
 	Pvector tmp;
@@ -44,41 +80,66 @@ Pvector Pvector::subTwoVector(Pvector v, Pvector v2)
 	return tmp;
 }
 
-// Adds to a Pvector by a constant number
+/**
+ * @brief Adds to a Pvector by a constant number
+ * 
+ * @param s 
+ */
 void Pvector::subScalar(float s)
 {
 	x -= s;
 	y -= s;
 }
 
-// Multiplies 2 vectors
+/**
+ * @brief Multiplies 2 vectors
+ * 
+ * @param v 
+ */
 void Pvector::mulVector(Pvector v)
 {
 	x *= v.x;
 	y *= v.y;
 }
 
-// Adds to a Pvector by a constant number
+/**
+ * @brief Adds to a Pvector by a constant number
+ * 
+ * @param s 
+ */
 void Pvector::mulScalar(float s)
 {
 	x *= s;
 	y *= s;
 }
 
-// Divides 2 vectors
+/**
+ * @brief Divides 2 vectors
+ * 
+ * @param v 
+ */
 void Pvector::divVector(Pvector v)
 {
 	x /= v.x;
 	y /= v.y;
 }
 
-// Adds to a Pvector by a constant number
+/**
+ * @brief Adds to a Pvector by a constant number
+ * 
+ * @param s 
+ */
 void Pvector::divScalar(float s)
 {
 	x /= s;
 	y /= s;
 }
 
+/**
+ * @brief Limit the Pvector
+ * 
+ * @param max 
+ */
 void Pvector::limit(double max)
 {
 	double size = magnitude();
@@ -88,7 +149,12 @@ void Pvector::limit(double max)
 	}
 }
 
-// Calculates the distance between the first Pvector and second Pvector
+/**
+ * @brief Calculates the distance between the first Pvector and second Pvector
+ * 
+ * @param v 
+ * @return float 
+ */
 float Pvector::distance(Pvector v) const
 {
 	float dx = x - v.x;
@@ -97,26 +163,44 @@ float Pvector::distance(Pvector v) const
 	return dist;
 }
 
-// Calculates the dot product of a vector
+/**
+ * @brief Calculates the dot product of a vector
+ * 
+ * @param v 
+ * @return float 
+ */
 float Pvector::dotProduct(Pvector v) const
 {
 	float dot = x * v.x + y * v.y;
 	return dot;
 }
 
-// Calculates magnitude of referenced object
+/**
+ * @brief Calculates magnitude of referenced object
+ * 
+ * @return float 
+ */
 float Pvector::magnitude() const
 {
 	return sqrt(x*x + y*y);
 }
-
+/**
+ * @brief magnitude of referenced object
+ * 
+ * @param x 
+ */
 void Pvector::setMagnitude(float x)
 {
 	normalize();
 	mulScalar(x);
 }
 
-// Calculate the angle between Pvector 1 and Pvector 2
+/**
+ * @brief Calculate the angle between Pvector 1 and Pvector 2
+ * 
+ * @param v 
+ * @return float 
+ */
 float Pvector::angleBetween(Pvector v) const
 {
 	if (x == 0 && y == 0) return 0.0f;
@@ -137,7 +221,10 @@ float Pvector::angleBetween(Pvector v) const
 	return tmp;
 }
 
-// normalize divides x and y by magnitude if it has a magnitude.
+/**
+ * @brief normalize divides x and y by magnitude if it has a magnitude.
+ * 
+ */
 void Pvector::normalize()
 {
 	float m = magnitude();
@@ -150,7 +237,12 @@ void Pvector::normalize()
 	}
 }
 
-// Creates and returns a copy of the Pvector used as a parameter
+/**
+ * @brief Creates and returns a copy of the Pvector used as a parameter
+ * 
+ * @param v 
+ * @return Pvector 
+ */
 Pvector Pvector::copy(Pvector v)
 {
 	Pvector copy(v.x, v.y);

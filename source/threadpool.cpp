@@ -1,3 +1,13 @@
+/**
+ * @file threadpool.cpp
+ * @author https://stackoverflow.com/users/1322972/whozcraig and Susanna Hepp
+ * @brief https://stackoverflow.com/questions/23896421/efficiently-waiting-for-all-tasks-in-a-threadpool-to-finish
+ * @version 0.1
+ * @date 2020-07-12
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
 
 #include <iostream>
 #include <deque>
@@ -7,17 +17,25 @@
 #include <mutex>
 #include <random>
 #include <atomic>
+
 #include "threadpool.hpp"
 
+/**
+ * @brief Construct a new ThreadPool object
+ * 
+ * @param n Amount of threads
+ */
 ThreadPool::ThreadPool(unsigned int n)
-    : busy()
-    , processed()
-    , stop()
+    : busy(), processed(), stop()
 {
-    for (unsigned int i=0; i<n; ++i)
+    for (unsigned int i = 0; i < n; ++i)
         workers.emplace_back(std::bind(&ThreadPool::thread_proc, this));
 }
 
+/**
+ * @brief Destroy the ThreadPool object
+ * 
+ */
 ThreadPool::~ThreadPool()
 {
     // set stop-condition
@@ -27,16 +45,20 @@ ThreadPool::~ThreadPool()
     latch.unlock();
 
     // all threads terminate, then we're done.
-    for (auto& t : workers)
+    for (auto &t : workers)
         t.join();
 }
 
+/**
+ * @brief Thread processing
+ * 
+ */
 void ThreadPool::thread_proc()
 {
     while (true)
     {
         std::unique_lock<std::mutex> latch(queue_mutex);
-        cv_task.wait(latch, [this](){ return stop || !tasks.empty(); });
+        cv_task.wait(latch, [this]() { return stop || !tasks.empty(); });
         if (!tasks.empty())
         {
             // got work. set busy.
@@ -63,28 +85,24 @@ void ThreadPool::thread_proc()
         }
     }
 }
-
-// generic function push
-template<class F>
-void ThreadPool::enqueue(F&& f)
-{
-    std::unique_lock<std::mutex> lock(queue_mutex);
-    tasks.emplace_back(std::forward<F>(f));
-    cv_task.notify_one();
-}
-
-void ThreadPool::enqueue(std::function<void ()>&f)
+/**
+ * @brief Push Function into task queu
+ * 
+ * @param f 
+ */
+void ThreadPool::enqueue(std::function<void()> &f)
 {
     std::unique_lock<std::mutex> lock(queue_mutex);
     tasks.emplace_back(f);
     cv_task.notify_one();
 }
 
-
-
-// waits until the queue is empty.
+/**
+ * @brief Waits until the queue is empty.
+ * 
+ */
 void ThreadPool::waitFinished()
 {
     std::unique_lock<std::mutex> lock(queue_mutex);
-    cv_finished.wait(lock, [this](){ return tasks.empty() && (busy == 0); });
+    cv_finished.wait(lock, [this]() { return tasks.empty() && (busy == 0); });
 }

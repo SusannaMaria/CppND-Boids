@@ -31,6 +31,21 @@ class BoidConfig{
         void WindowWidth(int ww);
 
     private:
+		const char *toml_config = R"TOMLCONFIG([boids]
+version = 1.0
+uistatfont = "assets/consola.ttf"
+preysprite = "assets/fly16x16.png"
+predsprite = "assets/fly16x16_red.png"
+multithreaded = true
+amountprey = 1000
+desSep = 20.0
+desAli = 70.0
+desCoh = 25.0
+sepW = 1.5
+aliW = 1.0
+cohW = 1.0
+theta = 0.0
+			)TOMLCONFIG";    
         std::shared_ptr<cpptoml::table> _config;
         int _window_height;
         int _window_width;
