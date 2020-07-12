@@ -28,7 +28,7 @@ public:
 	Flock(){};
 
 	// Accessor functions
-	int getSize() const;
+	int getSize() const { return _flockvect.size(); }
 
 	void init(int width, int height,std::shared_ptr<BoidConfig> config);
 
@@ -55,6 +55,8 @@ public:
 	void addCohW();
 	void subCohW();
 
+	int AmountObstacles() const{return this->_config->AmountObstacles();}
+
 	float DesSep() const {return this->_desSep;}
 	float DesAli() const {return this->_desAli;}
 	float DesCoh() const {return this->_desCoh;}
@@ -68,12 +70,14 @@ public:
 	void addBoid(float x, float y, bool predStatus, int unsigned spritenr);
 
 	shared_ptr<Boid> getBoidPtr(int id);
-	void sort(int width, int height);
+	void sort();
 	void flockit();
 
 private:
 	int _window_height;
 	int _window_width;	
+	int _grid_x;
+	int _grid_y;
 
 	float _desSep;
 	float _desAli;

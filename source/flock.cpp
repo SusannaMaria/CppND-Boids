@@ -1,11 +1,26 @@
+/**
+ * @file flock.cpp
+ * @author Jorge Yanar(https://github.com/jyanar), Susanna Hepp (https://github.com/SusannaMaria)
+ * @brief Flocking Functions
+ * Jorge: Base implementation
+ * Susanna: Introduce Smart Ptr, relocate central attributes of boids into flock, Sorting of boids by location in grid and implementatation of multithreading
+ * @version 1.0
+ * @date 2020-07-10
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
 #include "boid.hpp"
-#include "flock.hpp"
 #include "threadpool.hpp"
+#include "flock.hpp"
 
-// =============================================== //
-// ======== Flock Functions from Flock.h ========= //
-// =============================================== //
-
+/**
+ * @brief 
+ * 
+ * @param width 
+ * @param height 
+ * @param config 
+ */
 void Flock::init(int width, int height, std::shared_ptr<BoidConfig> config)
 {
 	_config = config;
@@ -13,24 +28,31 @@ void Flock::init(int width, int height, std::shared_ptr<BoidConfig> config)
 	_window_height = height;
 
 	_desSep = _config->BP("desSep");
-	_desAli= _config->BP("desAli");
-	_desCoh= _config->BP("desCoh");
-	_sepW= _config->BP("sepW");
-	_aliW= _config->BP("aliW");
-	_cohW= _config->BP("cohW");
-	_theta= _config->BP("theta");
+	_desAli = _config->BP("desAli");
+	_desCoh = _config->BP("desCoh");
+	_sepW = _config->BP("sepW");
+	_aliW = _config->BP("aliW");
+	_cohW = _config->BP("cohW");
+	_theta = _config->BP("theta");
 
-	for (int i = 0; i < 12; i++)
+	_grid_x = _config->GridX();
+	_grid_y = _config->GridY();
+
+	for (int i = 0; i < _grid_x*_grid_y; i++)
 	{
 		vector<shared_ptr<Boid>> ele;
 		sortboids.push_back(ele);
 	}
 }
 
-int Flock::getSize() const { return _flockvect.size(); }
-
-//Boid Flock::getBoid(int i) { return flock[i]; }
-
+/**
+ * @brief Create new Boid and add to internal vector
+ * 
+ * @param x 
+ * @param y 
+ * @param predStatus 
+ * @param spritenr 
+ */
 void Flock::addBoid(float x, float y, bool predStatus, int unsigned spritenr)
 {
 	std::shared_ptr<Boid> bu = std::make_shared<Boid>(x, y, predStatus, spritenr);
@@ -39,13 +61,19 @@ void Flock::addBoid(float x, float y, bool predStatus, int unsigned spritenr)
 	_flockvect.push_back(bu);
 }
 
-void Flock::sort(int width, int height)
+/**
+ * @brief Sort boids in grid, this is single threaded
+ * 
+ * @param width 
+ * @param height 
+ */
+void Flock::sort()
 {
 
-	int xs = width / 4;
-	int ys = height / 3;
+	int xs = _window_width / _grid_x;
+	int ys = _window_height / _grid_y;
 
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < _grid_x * _grid_y; i++)
 	{
 		sortboids[i].clear();
 	}
@@ -56,30 +84,26 @@ void Flock::sort(int width, int height)
 		int segidx = (int)floor(_flockvect[i]->Location().x / xs);
 		int segidy = (int)floor(_flockvect[i]->Location().y / ys);
 
-		if (segidx > 3)
+		if (segidx > _grid_x - 1)
 		{
-			segidx = 3;
+			segidx = _grid_x - 1;
 		}
-		if (segidy > 2)
+		if (segidy > _grid_y - 1)
 		{
-			segidy = 2;
+			segidy = _grid_y - 1;
 		}
 
 		auto duda = _flockvect[i];
-		//cout << (segidx + 3 * segidy) << endl;
-		sortboids[segidx + 3 * segidy].push_back(duda);
-		//cout << "x:" << _flockvect[i]->location.x << "|id:" << segidx << "|y:" << _flockvect[i]->location.y << "|id:" << segidy << "|id:" << (segidx + 3 * segidy) << endl;
+		sortboids[segidx + (_grid_x - 1) * segidy].push_back(duda);
 	}
-
-	// for (int i=0;i<6;i++){
-	// 	cout << sortboids[i].size()<<"|";
-	// }
-	// cout << endl;
 }
-
+/**
+ * @brief Multithreading of flocking
+ * 
+ */
 void Flock::flockit()
 {
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < _grid_x * _grid_y; i++)
 	{
 		std::function<void()> doThing = std::bind(&Flock::flockingsort, this, i);
 		tp.enqueue(doThing);
@@ -87,23 +111,23 @@ void Flock::flockit()
 	tp.waitFinished();
 }
 
-void Flock::flockingsortall()
-{
-	for (int i = 0; i < sortboids.size(); i++)
-	{
+// void Flock::flockingsortall()
+// {
+// 	for (int i = 0; i < sortboids.size(); i++)
+// 	{
 
-		for (int j = 0; j < sortboids[i].size(); j++)
-		{
-			for (int k = 0; k < sortboids[i].size(); k++)
-			{
-				if (sortboids[i][j]->Location().distance(sortboids[i][k]->Location()) <= abs(20)) // Not sure if distance is 1:1 with SFML window size or if it is even working
-				{
-					sortboids[i][j]->run(sortboids[i]);
-				}
-			}
-		}
-	}
-}
+// 		for (int j = 0; j < sortboids[i].size(); j++)
+// 		{
+// 			for (int k = 0; k < sortboids[i].size(); k++)
+// 			{
+// 				if (sortboids[i][j]->Location().distance(sortboids[i][k]->Location()) <= abs(20)) // Not sure if distance is 1:1 with SFML window size or if it is even working
+// 				{
+// 					sortboids[i][j]->run(sortboids[i]);
+// 				}
+// 			}
+// 		}
+// 	}
+// }
 
 void Flock::flockingsort(int i)
 {
@@ -180,7 +204,6 @@ void Flock::addDesCoh()
 void Flock::subDesCoh()
 {
 	_desCoh -= 1;
-
 }
 
 void Flock::addSepW()

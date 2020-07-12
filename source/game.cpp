@@ -82,8 +82,7 @@ void Game::Run()
 		createBoid(_window_width / 2, _window_height / 2, false, spritenr);
 	}
 
-	obstacles = std::make_shared<ObstaclesContainer>(_window_width, _window_height, 50);
-
+	obstacles = std::make_shared<ObstaclesContainer>(flock, _window_width, _window_height, 50);
 	addUiStat(162, "Frames per Second: ");
 	addUiStat(155, "Total Prey Count: ");
 	addUiStat(183, "Total Predator Count: ");
@@ -298,7 +297,7 @@ void Game::Render(float fps, unsigned int counter)
 
 	if (_multithreaded)
 	{
-		flock->sort(_window_width, _window_height);
+		flock->sort();
 		flock->flockit();
 	}
 	else

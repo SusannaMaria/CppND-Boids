@@ -15,10 +15,6 @@
 
 #include "pvector.hpp"
 
-// =================================================== //
-// ======== Pvector Functions from Pvector.h ========= //
-// =================================================== //
-
 /**
  * @brief Sets values of x and y for Pvector
  * 

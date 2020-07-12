@@ -155,3 +155,26 @@ float BoidConfig::BP(std::string param) const
 	float result = *(_config->get_qualified_as<double>(key));
 	return result;
 }
+
+/**
+ * @brief Amount of Obstacles
+ * 
+ * @return int 
+ */
+int BoidConfig::AmountObstacles() const
+{
+	int result = *(_config->get_qualified_as<int>("boids.amountobstacles"));
+	return result;
+}
+
+int BoidConfig::GridX() const
+{
+	int result = *(_config->get_qualified_as<int>("boids.gridx"));
+	return result;
+}
+
+int BoidConfig::GridY() const
+{
+	int result = *(_config->get_qualified_as<int>("boids.gridy"));
+	return result;
+}

@@ -1,11 +1,17 @@
-#ifndef POLARVECTOR_HPP
-#define POLARVECTOR_HPP
+/**
+ * @file polarvector.hpp
+ * @author https://www.sfml-dev.org (https://github.com/SFML/SFML/wiki/Source%3A-High-Performance-Sprite-Container)
+ * @brief Polar Vector class uses radians as angles, where r is the radius and t is the angle.
+ * @version 1.0
+ * @date 2013-01-18
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
 
-///Polar Vector class
+#pragma once
+
 #include <SFML/System/Vector2.hpp>
-
-///The class uses radians as angles, where r is the radius and t is the angle.
-
 class PolarVector
 { 
   public:
@@ -28,4 +34,3 @@ bool operator ==(const PolarVector& left, const PolarVector& right);
 
 bool operator !=(const PolarVector& left, const PolarVector& right);
 
-#endif // POLARVECTOR_HPP

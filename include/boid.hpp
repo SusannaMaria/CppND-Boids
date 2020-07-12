@@ -50,6 +50,11 @@ public:
 	 */
 	Boid(float x, float y, bool predCheck, int unsigned spritenr);
 
+	/**
+	 * @brief Set the Parent object
+	 * 
+	 * @param flockptr 
+	 */
 	void setParent(shared_ptr<Flock> flockptr) { this->myFlock = flockptr; }
 
 	/**

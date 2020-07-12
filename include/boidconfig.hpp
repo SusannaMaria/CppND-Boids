@@ -24,11 +24,13 @@ class BoidConfig{
         bool Multithreaded() const;
         int AmountPrey() const;
         float BP(std::string param) const;
-
+        int AmountObstacles() const;
         int WindowHeight() const;
         int WindowWidth() const;
         void WindowHeight(int wh);
         void WindowWidth(int ww);
+        int GridX() const;
+        int GridY() const;
 
     private:
 		const char *toml_config = R"TOMLCONFIG([boids]
@@ -45,6 +47,10 @@ sepW = 1.5
 aliW = 1.0
 cohW = 1.0
 theta = 0.0
+amountobstacles = 5
+gridx = 4
+gridy = 3
+
 			)TOMLCONFIG";    
         std::shared_ptr<cpptoml::table> _config;
         int _window_height;

@@ -1,10 +1,21 @@
+/**
+ * @file obstacle.cpp
+ * @author Susanna Hepp (https://github.com/SusannaMaria)
+ * @brief Obstacle avoid for boids
+ * @version 1.0
+ * @date 2020-07-10
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
 #define _USE_MATH_DEFINES
-#include "obstacle.hpp"
 #include <cmath>
 #define PI 3.14159265
 #include <iostream>
-#include "boid.hpp"
 #include "pvector.hpp"
+#include "boid.hpp"
+#include "obstacle.hpp"
+
 /**
  * @brief draw function
  * 
@@ -17,6 +28,11 @@ void Obstacle::draw(sf::RenderTarget &target, sf::RenderStates states) const
     target.draw(m_circle, states);
 }
 
+/**
+ * @brief Avoid obstacle 
+ * 
+ * @param boid 
+ */
 void Obstacle::avoid(shared_ptr<Boid> boid)
 {
     float steerAngle = 0.0;
