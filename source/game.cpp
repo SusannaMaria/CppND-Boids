@@ -53,7 +53,7 @@ Game::Game()
 	flock->init(_window_width, _window_height, _config);
 
 	// Load Font from file
-	f_uistatsfont.loadFromFile(_config->FontLocation());
+	_uistatsfont.loadFromFile(_config->FontLocation());
 }
 
 /**
@@ -70,11 +70,11 @@ Game::~Game()
  * @param xpos 
  * @param text 
  */
-void Game::addUiStat(int xpos, string text)
+void Game::_AddUiStat(int xpos, string text)
 {
 	int fontsize = _config->FontSize();
 	int nr = _uistats.size();
-	std::shared_ptr<sf::Text> eleText = std::make_shared<sf::Text>(text, f_uistatsfont);
+	std::shared_ptr<sf::Text> eleText = std::make_shared<sf::Text>(text, _uistatsfont);
 
 	eleText->setFillColor(sf::Color::White);
 	eleText->setCharacterSize(fontsize);
@@ -109,21 +109,21 @@ void Game::Run()
 	for (int i = 0; i < _config->AmountPrey(); i++)
 	{
 		unsigned int spritenr = ASH->addSprite();
-		createBoid(_window_width / 2, _window_height / 2, false, spritenr);
+		_CreateBoid(_window_width / 2, _window_height / 2, false, spritenr);
 	}
 
 	// TODO: This can be improved that the xpos is calculated based on textsize and fontsize
-	addUiStat(162, "Frames per Second: ");
-	addUiStat(155, "Total Prey Count: ");
-	addUiStat(183, "Total Predator Count: ");
-	addUiStat(155, "Total Boid Count: ");
-	addUiStat(162, "Separation Amount: ");
-	addUiStat(155, "Alignment Amount: ");
-	addUiStat(148, "Cohesion Amount: ");
-	addUiStat(162, "Separation Weight: ");
-	addUiStat(155, "Alignment Weight: ");
-	addUiStat(148, "Cohesion Weight: ");
-	addUiStat(148, "Flocking(ms): ");
+	_AddUiStat(162, "Frames per Second: ");
+	_AddUiStat(155, "Total Prey Count: ");
+	_AddUiStat(183, "Total Predator Count: ");
+	_AddUiStat(155, "Total Boid Count: ");
+	_AddUiStat(162, "Separation Amount: ");
+	_AddUiStat(155, "Alignment Amount: ");
+	_AddUiStat(148, "Cohesion Amount: ");
+	_AddUiStat(162, "Separation Weight: ");
+	_AddUiStat(155, "Alignment Weight: ");
+	_AddUiStat(148, "Cohesion Weight: ");
+	_AddUiStat(148, "Flocking(ms): ");
 
 	// Clock added to calculate frame rate, may cause a small amount of slowdown?
 	sf::Clock clock;
@@ -136,9 +136,9 @@ void Game::Run()
 	{
 		float currentTime = clock.restart().asSeconds();
 		float fps = 1 / currentTime; // 1 / refresh time = estimate of fps
-		HandleInput();
+		_HandleInput();
 		counter++;
-		Render(fps, counter);
+		_Render(fps, counter);
 	}
 }
 
@@ -146,7 +146,7 @@ void Game::Run()
  * @brief Handle the user input and change the simulation based on it
  * 
  */
-void Game::HandleInput()
+void Game::_HandleInput()
 {
 	sf::Event event;
 	while (_window.pollEvent(event))
@@ -169,7 +169,7 @@ void Game::HandleInput()
 			event.key.code == sf::Keyboard::Space)
 		{
 			unsigned int spritenr = ASH->addSprite();
-			createBoid(rand() % _window_width, rand() % _window_height, false, spritenr);
+			_CreateBoid(rand() % _window_width, rand() % _window_height, false, spritenr);
 		}
 
 		//Events for modifying the values in Boids, possibly can be refactored?
@@ -267,7 +267,7 @@ void Game::HandleInput()
 		// Gets mouse coordinates, sets that as the location of the boid and the shape
 		sf::Vector2i mouseCoords = sf::Mouse::getPosition(_window);
 		unsigned int spritenr = RED->addSprite();
-		createBoid(mouseCoords.x, mouseCoords.y, true, spritenr);
+		_CreateBoid(mouseCoords.x, mouseCoords.y, true, spritenr);
 	}
 }
 
@@ -279,7 +279,7 @@ void Game::HandleInput()
  * @param predStatus 
  * @param spritenr 
  */
-void Game::createBoid(float x, float y, bool predStatus, int unsigned spritenr)
+void Game::_CreateBoid(float x, float y, bool predStatus, int unsigned spritenr)
 {
 	if (predStatus){
 		flock->addBoid(x, y, predStatus, spritenr,RED);
@@ -295,7 +295,7 @@ void Game::createBoid(float x, float y, bool predStatus, int unsigned spritenr)
  * @param id 
  * @param value 
  */
-void Game::updateUiStat(int id, float value)
+void Game::_UpdateUiStat(int id, float value)
 {
 	_uistats[id]->setString(_uistatstext[id] + to_string(int(value)));
 	_window.draw(*_uistats[id]);
@@ -307,22 +307,22 @@ void Game::updateUiStat(int id, float value)
  * @param fps 
  * @param counter 
  */
-void Game::Render(float fps, unsigned int counter)
+void Game::_Render(float fps, unsigned int counter)
 {
 	_window.clear();
 
 	// Update the UI Stats
-	updateUiStat(0, fps + 0.5);
-	updateUiStat(1, flock->preyCount());
-	updateUiStat(2, flock->predCount());
-	updateUiStat(3, flock->getSize());
-	updateUiStat(4, flock->DesSep() + 0.5);
-	updateUiStat(5, flock->DesAli() + 0.5);
-	updateUiStat(6, flock->DesCoh() + 0.5);
-	updateUiStat(7, flock->SepW());
-	updateUiStat(8, flock->AliW());
-	updateUiStat(9, flock->CohW());
-	updateUiStat(10, _durationofflocking / 1000);
+	_UpdateUiStat(0, fps + 0.5);
+	_UpdateUiStat(1, flock->preyCount());
+	_UpdateUiStat(2, flock->predCount());
+	_UpdateUiStat(3, flock->getSize());
+	_UpdateUiStat(4, flock->DesSep() + 0.5);
+	_UpdateUiStat(5, flock->DesAli() + 0.5);
+	_UpdateUiStat(6, flock->DesCoh() + 0.5);
+	_UpdateUiStat(7, flock->SepW());
+	_UpdateUiStat(8, flock->AliW());
+	_UpdateUiStat(9, flock->CohW());
+	_UpdateUiStat(10, _durationofflocking / 1000);
 
 	// Draws all of the Sprites out, and applies functions that are needed to update.
 	for (int i = 0; i < flock->getSize(); i++)
