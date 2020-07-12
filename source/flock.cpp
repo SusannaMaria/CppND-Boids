@@ -53,10 +53,11 @@ void Flock::init(int width, int height, std::shared_ptr<BoidConfig> config)
  * @param predStatus 
  * @param spritenr 
  */
-void Flock::addBoid(float x, float y, bool predStatus, int unsigned spritenr)
+void Flock::addBoid(float x, float y, bool predstatus, int unsigned spritenr, std::shared_ptr<AltSpriteHolder> spritecontainer)
 {
-	std::shared_ptr<Boid> bu = std::make_shared<Boid>(x, y, predStatus, spritenr);
+	std::shared_ptr<Boid> bu = std::make_shared<Boid>(x, y, predstatus, spritenr);
 	bu->setParent(shared_from_this());
+	bu->SpriteContainer(spritecontainer);
 	bu->Theta(Theta());
 	_flockvect.push_back(bu);
 }
@@ -110,25 +111,11 @@ void Flock::flockit()
 	}
 	tp.waitFinished();
 }
-
-// void Flock::flockingsortall()
-// {
-// 	for (int i = 0; i < sortboids.size(); i++)
-// 	{
-
-// 		for (int j = 0; j < sortboids[i].size(); j++)
-// 		{
-// 			for (int k = 0; k < sortboids[i].size(); k++)
-// 			{
-// 				if (sortboids[i][j]->Location().distance(sortboids[i][k]->Location()) <= abs(20)) // Not sure if distance is 1:1 with SFML window size or if it is even working
-// 				{
-// 					sortboids[i][j]->run(sortboids[i]);
-// 				}
-// 			}
-// 		}
-// 	}
-// }
-
+/**
+ * @brief Perform flocking of one sorted vector of boids
+ * 
+ * @param i 
+ */
 void Flock::flockingsort(int i)
 {
 	for (int j = 0; j < sortboids[i].size(); j++)
@@ -143,8 +130,10 @@ void Flock::flockingsort(int i)
 	}
 }
 
-// Runs the run function for every boid in the flock checking against the flock
-// itself. Which in turn applies all the rules to the flock.
+/**
+ * @brief Flocking function for every boid in the flock checking against the flock - single threading solution
+ * 
+ */
 void Flock::flocking()
 {
 	for (int i = 0; i < _flockvect.size(); i++)
@@ -160,6 +149,11 @@ void Flock::flocking()
 	}
 }
 
+/**
+ * @brief Get amount of preys
+ * 
+ * @return int 
+ */
 int Flock::preyCount()
 {
 	int count = 0;
@@ -171,71 +165,21 @@ int Flock::preyCount()
 	return count;
 }
 
+/**
+ * @brief get amount of predators
+ * 
+ * @return int 
+ */
 int Flock::predCount()
 {
 	return _flockvect.size() - preyCount();
 }
-
-void Flock::addDesSep()
-{
-	_desSep += 1;
-}
-
-void Flock::subDesSep()
-{
-	_desSep -= 1;
-}
-
-void Flock::addDesAli()
-{
-	_desAli += 1;
-}
-
-void Flock::subDesAli()
-{
-	_desAli -= 1;
-}
-
-void Flock::addDesCoh()
-{
-	_desCoh += 1;
-}
-
-void Flock::subDesCoh()
-{
-	_desCoh -= 1;
-}
-
-void Flock::addSepW()
-{
-	_sepW += .1;
-}
-
-void Flock::subSepW()
-{
-	_sepW -= .1;
-}
-
-void Flock::addAliW()
-{
-	_aliW += .1;
-}
-
-void Flock::subAliW()
-{
-	_aliW -= .1;
-}
-
-void Flock::addCohW()
-{
-	_cohW += .1;
-}
-
-void Flock::subCohW()
-{
-	_cohW -= .1;
-}
-
+/**
+ * @brief Get pointer of boid
+ * 
+ * @param id 
+ * @return shared_ptr<Boid> 
+ */
 shared_ptr<Boid> Flock::getBoidPtr(int id)
 {
 	if (id >= _flockvect.size())

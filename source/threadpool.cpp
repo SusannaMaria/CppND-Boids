@@ -2,6 +2,7 @@
  * @file threadpool.cpp
  * @author https://stackoverflow.com/users/1322972/whozcraig and Susanna Hepp
  * @brief https://stackoverflow.com/questions/23896421/efficiently-waiting-for-all-tasks-in-a-threadpool-to-finish
+ * Fill functioncalls in thread pool and wait until pool is empty again
  * @version 0.1
  * @date 2020-07-12
  * 

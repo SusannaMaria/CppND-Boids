@@ -1,14 +1,15 @@
 /**
  * @file pvector.cpp
- * @author your name (you@domain.com)
- * @brief 
- * @version 0.1
- * @date 2020-07-12
+ * @author Jorge Yanar(https://github.com/jyanar), Susanna Hepp (https://github.com/SusannaMaria)
+ * @brief Pvector class implements Euclidian vectors
+ * Jorge: Base implementation
+ * Susanna: Clean up code, almost_equal function
+ * @version 1.0
+ * @date 2020-07-10
  * 
  * @copyright Copyright (c) 2020
  * 
  */
-
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <math.h>

@@ -1,3 +1,15 @@
+/**
+ * @file game.cpp
+ * @author Jorge Yanar(https://github.com/jyanar), Susanna Hepp (https://github.com/SusannaMaria)
+ * @brief Central Class of boid application to control graphics (using sfml) and user interface
+ * Jorge: Base implementation
+ * Susanna: Clean up code, optimize drawing, Introduce Smart Ptr, introduce central configuration
+ * @version 1.0
+ * @date 2020-07-10
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
 #include <iostream>
 #include <memory>
 #include <fstream>
@@ -15,41 +27,58 @@ using namespace std;
 
 float Pi{3.141529};
 
-// Construct window using SFML
-	Game::Game()
+/**
+ * @brief Construct a new Game object using SFML 
+ * 
+ */
+Game::Game()
 {
+	srand((int)time(0));
+
+	// Load configuration
 	_config = std::make_shared<BoidConfig>();
-
 	_multithreaded = _config->Multithreaded();
-	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 
+	// Create Window based on Desktop resolution
+	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 	this->_window_height = desktop.height;
 	this->_window_width = desktop.width;
 	this->_window.create(sf::VideoMode(_window_width, _window_height, desktop.bitsPerPixel), "Boids", sf::Style::None);
 
+	// Print intstruction how to control Boids with curser keys
 	printInstructions();
-	srand((int)time(0));
 
 	// Flocking object
 	flock = std::make_shared<Flock>();
-	flock->init(_window_width, _window_height,_config);
+	flock->init(_window_width, _window_height, _config);
 
+	// Load Font from file
 	f_uistatsfont.loadFromFile(_config->FontLocation());
 }
 
+/**
+ * @brief Destroy the Game object
+ * 
+ */
 Game::~Game()
 {
 }
 
+/**
+ * @brief Create entry in UIStat panel
+ * 
+ * @param xpos 
+ * @param text 
+ */
 void Game::addUiStat(int xpos, string text)
 {
-
+	int fontsize = _config->FontSize();
 	int nr = _uistats.size();
 	std::shared_ptr<sf::Text> eleText = std::make_shared<sf::Text>(text, f_uistatsfont);
 
 	eleText->setFillColor(sf::Color::White);
-	eleText->setCharacterSize(12);
-	eleText->setPosition(_window_width - xpos, nr * 12);
+	eleText->setCharacterSize(fontsize);
+	eleText->setPosition(_window_width - xpos, nr * fontsize);
 
 	_uistatstext.push_back(text);
 	_uistats.push_back(eleText);
@@ -61,28 +90,29 @@ void Game::addUiStat(int xpos, string text)
  */
 void Game::Run()
 {
-
+	// Creation of Sprite Container and Obstacles Container
 	ASH = std::make_shared<AltSpriteHolder>();
 	RED = std::make_shared<AltSpriteHolder>();
+	obstacles = std::make_shared<ObstaclesContainer>(flock, _window_width, _window_height, 50);
+	M_red = std::make_shared<sf::Sprite>(T_red);
+	M = std::make_shared<sf::Sprite>(T);
 
 	if (!T.loadFromFile(_config->PreySprite()))
 		exit(1);
 	if (!T_red.loadFromFile(_config->PredSprite()))
 		exit(1);
 
-	M = std::make_shared<sf::Sprite>(T);
 	ASH->setTexture(T);
-
-	M_red = std::make_shared<sf::Sprite>(T_red);
 	RED->setTexture(T_red);
 
+	// Create prey boids population
 	for (int i = 0; i < _config->AmountPrey(); i++)
 	{
 		unsigned int spritenr = ASH->addSprite();
 		createBoid(_window_width / 2, _window_height / 2, false, spritenr);
 	}
 
-	obstacles = std::make_shared<ObstaclesContainer>(flock, _window_width, _window_height, 50);
+	// TODO: This can be improved that the xpos is calculated based on textsize and fontsize
 	addUiStat(162, "Frames per Second: ");
 	addUiStat(155, "Total Prey Count: ");
 	addUiStat(183, "Total Predator Count: ");
@@ -100,6 +130,8 @@ void Game::Run()
 	_window.setFramerateLimit(120); // Limit the framerate to 120 fps
 
 	unsigned int counter = 0;
+
+	// Now lets run the simulation
 	while (_window.isOpen())
 	{
 		float currentTime = clock.restart().asSeconds();
@@ -110,6 +142,10 @@ void Game::Run()
 	}
 }
 
+/**
+ * @brief Handle the user input and change the simulation based on it
+ * 
+ */
 void Game::HandleInput()
 {
 	sf::Event event;
@@ -235,25 +271,47 @@ void Game::HandleInput()
 	}
 }
 
+/**
+ * @brief Create Boids
+ * 
+ * @param x 
+ * @param y 
+ * @param predStatus 
+ * @param spritenr 
+ */
 void Game::createBoid(float x, float y, bool predStatus, int unsigned spritenr)
 {
-	flock->addBoid(x, y, predStatus, spritenr);
-
-	// Boid b(x, y, predStatus);
-	// flock->addBoid(b);
+	if (predStatus){
+		flock->addBoid(x, y, predStatus, spritenr,RED);
+	}else{
+		flock->addBoid(x, y, predStatus, spritenr,ASH);
+	}
+	
 }
 
+/**
+ * @brief Helper function to update the UI Stats
+ * 
+ * @param id 
+ * @param value 
+ */
 void Game::updateUiStat(int id, float value)
 {
 	_uistats[id]->setString(_uistatstext[id] + to_string(int(value)));
 	_window.draw(*_uistats[id]);
 }
 
-//Method of passing text needs refactoring
+/**
+ * @brief Central render function
+ * 
+ * @param fps 
+ * @param counter 
+ */
 void Game::Render(float fps, unsigned int counter)
 {
 	_window.clear();
 
+	// Update the UI Stats
 	updateUiStat(0, fps + 0.5);
 	updateUiStat(1, flock->preyCount());
 	updateUiStat(2, flock->predCount());
@@ -266,35 +324,22 @@ void Game::Render(float fps, unsigned int counter)
 	updateUiStat(9, flock->CohW());
 	updateUiStat(10, _durationofflocking / 1000);
 
-	// Draws all of the Boids out, and applies functions that are needed to update.
+	// Draws all of the Sprites out, and applies functions that are needed to update.
 	for (int i = 0; i < flock->getSize(); i++)
 	{
+		auto boid = flock->getBoidPtr(i);
+		obstacles->avoid(boid);
+		float diff = -boid->updateThetaGetDiff();
 
-		// Applies the three rules to each boid in the flock and changes them accordingly.
-
-		obstacles->avoid(flock->getBoidPtr(i));
-
-		if (flock->getBoidPtr(i)->PredatorStatus())
-		{
-			RED->setPosition(flock->getBoidPtr(i)->Spritenr(), flock->getBoidPtr(i)->Location().x, flock->getBoidPtr(i)->Location().y);
-
-			// Calculates the angle where the velocity is pointing so that the triangle turns towards it.
-			float diff = -flock->getBoidPtr(i)->updateThetaGetDiff();
-
-			RED->rotateAroundSelf(flock->getBoidPtr(i)->Spritenr(), diff, true);
-		}
-		else
-		{
-			ASH->setPosition(flock->getBoidPtr(i)->Spritenr(), flock->getBoidPtr(i)->Location().x, flock->getBoidPtr(i)->Location().y);
-
-			// Calculates the angle where the velocity is pointing so that the triangle turns towards it.
-			float diff = -flock->getBoidPtr(i)->updateThetaGetDiff();
-
-			ASH->rotateAroundSelf(flock->getBoidPtr(i)->Spritenr(), diff, true);
-		}
+		// Update the sprizes
+		boid->SpriteContainer()->setPosition(boid->Spritenr(), boid->Location().x, boid->Location().y);
+		// Calculates the angle where the velocity is pointing so that the triangle turns towards it.
+		boid->SpriteContainer()->rotateAroundSelf(boid->Spritenr(), diff, true);
 	}
+	
 	auto t1 = std::chrono::high_resolution_clock::now();
 
+	// Applies the flocking, three rules to each boid in the flock and changes them accordingly.
 	if (_multithreaded)
 	{
 		flock->sort();

@@ -29,7 +29,7 @@ void Obstacle::draw(sf::RenderTarget &target, sf::RenderStates states) const
 }
 
 /**
- * @brief Avoid obstacle 
+ * @brief Avoid obstacle, calculated velcity to prevent crash, based on distance and angle of boid to center of obstacles
  * 
  * @param boid 
  */

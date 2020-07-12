@@ -31,6 +31,7 @@ class BoidConfig{
         void WindowWidth(int ww);
         int GridX() const;
         int GridY() const;
+        int FontSize() const;
 
     private:
 		const char *toml_config = R"TOMLCONFIG([boids]
@@ -50,6 +51,7 @@ theta = 0.0
 amountobstacles = 5
 gridx = 4
 gridy = 3
+fontsize = 12
 
 			)TOMLCONFIG";    
         std::shared_ptr<cpptoml::table> _config;

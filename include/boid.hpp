@@ -15,7 +15,7 @@
 
 #include <vector>
 #include <memory>
-
+#include "altspriteholder.hpp"
 #include "pvector.hpp"
 
 using namespace std;
@@ -57,6 +57,13 @@ public:
 	 */
 	void setParent(shared_ptr<Flock> flockptr) { this->myFlock = flockptr; }
 
+	/**
+	 * @brief Set the Parent object
+	 * 
+	 * @param flockptr 
+	 */
+	void SpriteContainer(std::shared_ptr<AltSpriteHolder> sc) { this->spritecontainer = sc; }
+	std::shared_ptr<AltSpriteHolder>  SpriteContainer() const { return this->spritecontainer;}
 	/**
 	 * @brief Adds force Pvector to current force Pvector
 	 * 
@@ -123,4 +130,5 @@ private:
 	float theta;		  // Rotational position in 2-dimensional space
 	shared_ptr<Flock> myFlock;
 	int unsigned spritenr;
+	std::shared_ptr<AltSpriteHolder> spritecontainer;
 };

@@ -178,3 +178,9 @@ int BoidConfig::GridY() const
 	int result = *(_config->get_qualified_as<int>("boids.gridy"));
 	return result;
 }
+
+int BoidConfig::FontSize() const
+{
+	int result = *(_config->get_qualified_as<int>("boids.fontsize"));
+	return result;
+}

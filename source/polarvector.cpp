@@ -1,3 +1,13 @@
+/**
+ * @file polarvector.hpp
+ * @author https://www.sfml-dev.org (https://github.com/SFML/SFML/wiki/Source%3A-High-Performance-Sprite-Container)
+ * @brief Polar Vector class uses radians as angles, where r is the radius and t is the angle.
+ * @version 1.0
+ * @date 2013-01-18
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
 #include "polarvector.hpp"
 #include <cmath>
 
