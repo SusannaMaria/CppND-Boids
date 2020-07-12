@@ -27,7 +27,10 @@ float Pi{3.141529};
 
 	printInstructions();
 	srand((int)time(0));
-	flock.init(_window_width, _window_height,_config);
+
+	flock = std::make_shared<Flock>();
+
+	flock->init(_window_width, _window_height,_config);
 	f_uistatsfont.loadFromFile(_config->FontLocation());
 }
 
@@ -135,73 +138,73 @@ void Game::HandleInput()
 		if (event.type == sf::Event::KeyPressed &&
 			event.key.code == sf::Keyboard::Q)
 		{
-			flock.addDesSep();
+			flock->addDesSep();
 		}
 
 		if (event.type == sf::Event::KeyPressed &&
 			event.key.code == sf::Keyboard::A)
 		{
-			flock.subDesSep();
+			flock->subDesSep();
 		}
 
 		if (event.type == sf::Event::KeyPressed &&
 			event.key.code == sf::Keyboard::W)
 		{
-			flock.addDesAli();
+			flock->addDesAli();
 		}
 
 		if (event.type == sf::Event::KeyPressed &&
 			event.key.code == sf::Keyboard::S)
 		{
-			flock.subDesAli();
+			flock->subDesAli();
 		}
 
 		if (event.type == sf::Event::KeyPressed &&
 			event.key.code == sf::Keyboard::E)
 		{
-			flock.addDesCoh();
+			flock->addDesCoh();
 		}
 
 		if (event.type == sf::Event::KeyPressed &&
 			event.key.code == sf::Keyboard::D)
 		{
-			flock.subDesCoh();
+			flock->subDesCoh();
 		}
 
 		if (event.type == sf::Event::KeyPressed &&
 			event.key.code == sf::Keyboard::I)
 		{
-			flock.addSepW();
+			flock->addSepW();
 		}
 
 		if (event.type == sf::Event::KeyPressed &&
 			event.key.code == sf::Keyboard::J)
 		{
-			flock.subSepW();
+			flock->subSepW();
 		}
 
 		if (event.type == sf::Event::KeyPressed &&
 			event.key.code == sf::Keyboard::O)
 		{
-			flock.addAliW();
+			flock->addAliW();
 		}
 
 		if (event.type == sf::Event::KeyPressed &&
 			event.key.code == sf::Keyboard::K)
 		{
-			flock.subAliW();
+			flock->subAliW();
 		}
 
 		if (event.type == sf::Event::KeyPressed &&
 			event.key.code == sf::Keyboard::P)
 		{
-			flock.addCohW();
+			flock->addCohW();
 		}
 
 		if (event.type == sf::Event::KeyPressed &&
 			event.key.code == sf::Keyboard::L)
 		{
-			flock.subCohW();
+			flock->subCohW();
 		}
 
 		if (event.type == sf::Event::KeyPressed &&
@@ -232,10 +235,10 @@ void Game::HandleInput()
 
 void Game::createBoid(float x, float y, bool predStatus, int unsigned spritenr)
 {
-	flock.addBoid(x, y, predStatus, spritenr);
+	flock->addBoid(x, y, predStatus, spritenr);
 
 	// Boid b(x, y, predStatus);
-	// flock.addBoid(b);
+	// flock->addBoid(b);
 }
 
 void Game::updateUiStat(int id, float value)
@@ -250,54 +253,54 @@ void Game::Render(float fps, unsigned int counter)
 	_window.clear();
 
 	updateUiStat(0, fps + 0.5);
-	updateUiStat(1, flock.preyCount());
-	updateUiStat(2, flock.predCount());
-	updateUiStat(3, flock.getSize());
-	updateUiStat(4, flock.getBoidPtr(0)->DesSep() + 0.5);
-	updateUiStat(5, flock.getBoidPtr(0)->DesAli() + 0.5);
-	updateUiStat(6, flock.getBoidPtr(0)->DesCoh() + 0.5);
-	updateUiStat(7, flock.getBoidPtr(0)->SepW());
-	updateUiStat(8, flock.getBoidPtr(0)->AliW());
-	updateUiStat(9, flock.getBoidPtr(0)->CohW());
+	updateUiStat(1, flock->preyCount());
+	updateUiStat(2, flock->predCount());
+	updateUiStat(3, flock->getSize());
+	updateUiStat(4, flock->DesSep() + 0.5);
+	updateUiStat(5, flock->DesAli() + 0.5);
+	updateUiStat(6, flock->DesCoh() + 0.5);
+	updateUiStat(7, flock->SepW());
+	updateUiStat(8, flock->AliW());
+	updateUiStat(9, flock->CohW());
 	updateUiStat(10, _durationofflocking / 1000);
 
 	// Draws all of the Boids out, and applies functions that are needed to update.
-	for (int i = 0; i < flock.getSize(); i++)
+	for (int i = 0; i < flock->getSize(); i++)
 	{
 
 		// Applies the three rules to each boid in the flock and changes them accordingly.
 
-		obstacles->avoid(flock.getBoidPtr(i));
+		obstacles->avoid(flock->getBoidPtr(i));
 
-		if (flock.getBoidPtr(i)->predatorStatus)
+		if (flock->getBoidPtr(i)->predatorStatus)
 		{
-			RED->setPosition(flock.getBoidPtr(i)->Spritenr(), flock.getBoidPtr(i)->location.x, flock.getBoidPtr(i)->location.y);
+			RED->setPosition(flock->getBoidPtr(i)->Spritenr(), flock->getBoidPtr(i)->location.x, flock->getBoidPtr(i)->location.y);
 
 			// Calculates the angle where the velocity is pointing so that the triangle turns towards it.
-			float diff = -flock.getBoidPtr(i)->updateThetaGetDiff();
+			float diff = -flock->getBoidPtr(i)->updateThetaGetDiff();
 
-			RED->rotateAroundSelf(flock.getBoidPtr(i)->Spritenr(), diff, true);
+			RED->rotateAroundSelf(flock->getBoidPtr(i)->Spritenr(), diff, true);
 		}
 		else
 		{
-			ASH->setPosition(flock.getBoidPtr(i)->Spritenr(), flock.getBoidPtr(i)->location.x, flock.getBoidPtr(i)->location.y);
+			ASH->setPosition(flock->getBoidPtr(i)->Spritenr(), flock->getBoidPtr(i)->location.x, flock->getBoidPtr(i)->location.y);
 
 			// Calculates the angle where the velocity is pointing so that the triangle turns towards it.
-			float diff = -flock.getBoidPtr(i)->updateThetaGetDiff();
+			float diff = -flock->getBoidPtr(i)->updateThetaGetDiff();
 
-			ASH->rotateAroundSelf(flock.getBoidPtr(i)->Spritenr(), diff, true);
+			ASH->rotateAroundSelf(flock->getBoidPtr(i)->Spritenr(), diff, true);
 		}
 	}
 	auto t1 = std::chrono::high_resolution_clock::now();
 
 	if (_multithreaded)
 	{
-		flock.sort(_window_width, _window_height);
-		flock.flockit();
+		flock->sort(_window_width, _window_height);
+		flock->flockit();
 	}
 	else
 	{
-		flock.flocking();
+		flock->flocking();
 	}
 	auto t2 = std::chrono::high_resolution_clock::now();
 	_durationofflocking = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();

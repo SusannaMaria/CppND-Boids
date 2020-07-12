@@ -1,4 +1,13 @@
-// #include "function_pool.h"
+/**
+ * @file flock.hpp
+ * @author Susanna Hepp (https://github.com/SusannaMaria)
+ * @brief class needed to create a flock of boids.
+ * @version 0.1
+ * @date 2020-07-12
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
 #include "threadpool.hpp"
 #include <vector>
 #include "boid.hpp"
@@ -8,27 +17,22 @@
 #ifndef FLOCK_H_
 #define FLOCK_H_
 
-// Brief description of Flock Class:
-// This file contains the class needed to create a flock of boids. It 
 /**
- * @brief utilizes boids class and initializes boid flocks with parameters
+ * @brief Utilizes boids class and initializes boid flocks with parameters
  * 
  */
-class Flock {
+class Flock : public std::enable_shared_from_this<Flock>{
 public:
 
 	//Constructors
 	Flock(){};
-	
-	std::shared_ptr<BoidConfig> _config;
 
-	//vector<Boid> flock;
 	// Accessor functions
 	int getSize() const;
-	Boid getBoid(int i);
+
 	void init(int width, int height,std::shared_ptr<BoidConfig> config);
+
 	// Mutator Functions
-	void addBoid(Boid b);
 	void flocking();
 	void flockingsort(int i);
 	void flockingsortall();
@@ -50,6 +54,17 @@ public:
 	void subAliW();
 	void addCohW();
 	void subCohW();
+
+	float DesSep() const {return this->_desSep;}
+	float DesAli() const {return this->_desAli;}
+	float DesCoh() const {return this->_desCoh;}
+	float SepW() const {return this->_sepW;}
+	float AliW() const {return this->_aliW;}
+	float CohW() const {return this->_cohW;}					
+	float Theta() const {return this->_theta;}	
+	int WindowHeight() const {return this->_window_height;}
+	int WindowWidth() const {return this->_window_width;}
+	
 	void addBoid(float x, float y, bool predStatus, int unsigned spritenr);
 
 	shared_ptr<Boid> getBoidPtr(int id);
@@ -57,12 +72,20 @@ public:
 	void flockit();
 
 private:
+	int _window_height;
+	int _window_width;	
+
+	float _desSep;
+	float _desAli;
+	float _desCoh;
+	float _sepW;
+	float _aliW;
+	float _cohW;	
+	float _theta;
+
+	std::shared_ptr<BoidConfig> _config;
 	vector<shared_ptr<Boid> > _flockvect;
 	vector<vector<shared_ptr<Boid> >> sortboids;
-	int _window_width;
-	int _window_height;
-	// Function_pool *func_pool;
-	// std::vector<std::thread> thread_pool;
 	ThreadPool tp;
 };
 

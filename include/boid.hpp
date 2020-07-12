@@ -2,7 +2,8 @@
  * @file Boid.h
  * @author 	Jorge Yanar(https://github.com/jyanar), Susanna Hepp (https://github.com/SusannaMaria)
  * @brief  	Boid Class to implement simple entities called boids (birdoids), function through three 
- * basic rules - alignment, cohesion, and separation (Jorge), extended and refactored to prevent obstacles and using sfml sprites (Susanna)
+ * Jorge: basic rules - alignment, cohesion, and separation, extended
+ * Susanna: refactored to use multi threading, prevent obstacles, using smart pointers and using sfml sprites
  * @version 1.0
  * @date 2020-07-10
  * 
@@ -16,7 +17,10 @@
 #include <vector>
 #include <memory>
 
+
 using namespace std;
+
+class Flock;
 
 /**
  * Boid Class to implement simple entities called boids
@@ -48,7 +52,7 @@ public:
 	 * @param x initialize with x-Position
 	 * @param y initialize with y-Position
 	 */
-	Boid(float x, float y);
+	Boid(float x, float y, int window_width, int window_height);
 
 	/**
 	 * @brief Construct a new Boid object
@@ -57,7 +61,10 @@ public:
 	 * @param y initialize with y-Position
 	 * @param predCheck Predator will have higher speeds
 	 */
-	Boid(float x, float y, bool predCheck, int unsigned spritenr,float desSep, float desAli, float desCoh, float sepW, float aliW, float cohW, float theta);
+	Boid(float x, float y,int window_width, int window_height,  bool predCheck, int unsigned spritenr,float desSep, float desAli, float desCoh, float sepW, float aliW, float cohW, float theta);
+	Boid(float x, float y, bool predCheck, int unsigned spritenr);
+
+	void setParent(shared_ptr<Flock> flockptr){this->myFlock = flockptr;}
 
 	/**
 	 * @brief Adds force Pvector to current force Pvector
@@ -74,7 +81,6 @@ public:
 	 * @return Pvector 
 	 */
 	Pvector Separation(vector<shared_ptr<Boid> > const &boids);
-	Pvector Separation(vector<Boid> Boids);
 
 	/**
 	 * @brief Velocity of the current boid to match that of boids that are nearby
@@ -83,7 +89,6 @@ public:
 	 * @return Pvector 
 	 */
 	Pvector Alignment(vector<shared_ptr<Boid> > const &boids);
-	Pvector Alignment(vector<Boid> Boids);
 
 
 	/**
@@ -93,7 +98,6 @@ public:
 	 * @return Pvector 
 	 */
 	Pvector Cohesion(vector<shared_ptr<Boid> > const &boids);
-	Pvector Cohesion(vector<Boid> Boids);
 
 	///Functions involving SFML and visualisation linking
 	Pvector seek(Pvector v);
@@ -102,37 +106,19 @@ public:
 
 	void update();
 	void flock(vector<shared_ptr<Boid> > const &v);
-	void flock(vector<Boid> v);
 	void borders();
 	float getAngle(Pvector v) const;
 
 	Pvector Location() const;
-	float DesSep() const;
-	float DesAli() const;
-	float DesCoh() const;
-	float SepW() const;
-	float AliW() const;
-	float CohW() const;
 	float Theta() const;
 	unsigned int Spritenr() const;
-
-	void DesSep(float x);
-	void DesAli(float x);
-	void DesCoh(float x);
-	void SepW(float x);
-	void AliW(float x);
-	void CohW(float x);
-	void Theta(float theta);
+	void Theta(float theta){this->theta = theta;}
 
 	float updateThetaGetDiff();
 	void Spritenr(unsigned int n);
 
 private:
-	float desSep;
-	float desAli;
-	float desCoh;
-	float sepW;
-	float aliW;
-	float cohW;
+	shared_ptr<Flock> myFlock;
+
 	int unsigned spritenr;
 };

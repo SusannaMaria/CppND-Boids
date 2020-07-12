@@ -12,6 +12,14 @@ void Flock::init(int width, int height, std::shared_ptr<BoidConfig> config)
 	_window_width = width;
 	_window_height = height;
 
+	_desSep = _config->BP("desSep");
+	_desAli= _config->BP("desAli");
+	_desCoh= _config->BP("desCoh");
+	_sepW= _config->BP("sepW");
+	_aliW= _config->BP("aliW");
+	_cohW= _config->BP("cohW");
+	_theta= _config->BP("theta");
+
 	for (int i = 0; i < 12; i++)
 	{
 		vector<shared_ptr<Boid>> ele;
@@ -25,7 +33,9 @@ int Flock::getSize() const { return _flockvect.size(); }
 
 void Flock::addBoid(float x, float y, bool predStatus, int unsigned spritenr)
 {
-	std::shared_ptr<Boid> bu = std::make_shared<Boid>(x, y, predStatus, spritenr, _config->BP("desSep"), _config->BP("desAli"), _config->BP("desCoh"), _config->BP("sepW"), _config->BP("aliW"), _config->BP("cohW"), _config->BP("theta"));
+	std::shared_ptr<Boid> bu = std::make_shared<Boid>(x, y, predStatus, spritenr);
+	bu->setParent(shared_from_this());
+	bu->Theta(Theta());
 	_flockvect.push_back(bu);
 }
 
@@ -144,98 +154,63 @@ int Flock::predCount()
 
 void Flock::addDesSep()
 {
-	for (int i = 0; i < _flockvect.size(); i++)
-	{
-		_flockvect[i]->DesSep(1);
-	}
+	_desSep += 1;
 }
 
 void Flock::subDesSep()
 {
-	for (int i = 0; i < _flockvect.size(); i++)
-	{
-		_flockvect[i]->DesSep(-1);
-	}
+	_desSep -= 1;
 }
 
 void Flock::addDesAli()
 {
-	for (int i = 0; i < _flockvect.size(); i++)
-	{
-		_flockvect[i]->DesAli(1);
-	}
+	_desAli += 1;
 }
 
 void Flock::subDesAli()
 {
-	for (int i = 0; i < _flockvect.size(); i++)
-	{
-		_flockvect[i]->DesAli(-1);
-	}
+	_desAli -= 1;
 }
 
 void Flock::addDesCoh()
 {
-	for (int i = 0; i < _flockvect.size(); i++)
-	{
-		_flockvect[i]->DesCoh(1);
-	}
+	_desCoh += 1;
 }
 
 void Flock::subDesCoh()
 {
-	for (int i = 0; i < _flockvect.size(); i++)
-	{
-		_flockvect[i]->DesCoh(-1);
-	}
+	_desCoh -= 1;
+
 }
 
 void Flock::addSepW()
 {
-	for (int i = 0; i < _flockvect.size(); i++)
-	{
-		_flockvect[i]->SepW(.1);
-	}
+	_sepW += .1;
 }
 
 void Flock::subSepW()
 {
-	for (int i = 0; i < _flockvect.size(); i++)
-	{
-		_flockvect[i]->SepW(-.1);
-	}
+	_sepW -= .1;
 }
 
 void Flock::addAliW()
 {
-	for (int i = 0; i < _flockvect.size(); i++)
-	{
-		_flockvect[i]->AliW(.1);
-	}
+	_aliW += .1;
 }
 
 void Flock::subAliW()
 {
-	for (int i = 0; i < _flockvect.size(); i++)
-	{
-		_flockvect[i]->AliW(-.1);
-	}
+	_aliW -= .1;
 }
 
 void Flock::addCohW()
 {
-	for (int i = 0; i < _flockvect.size(); i++)
-	{
-		_flockvect[i]->CohW(.1);
-	}
+	_cohW += .1;
 }
 
 void Flock::subCohW()
 {
-	for (int i = 0; i < _flockvect.size(); i++)
-	{
-		_flockvect[i]->CohW(-.1);
-	}
+	_cohW -= .1;
 }
 
 shared_ptr<Boid> Flock::getBoidPtr(int id)

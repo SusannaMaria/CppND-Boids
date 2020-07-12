@@ -12,6 +12,7 @@
 
 #include "cpptoml.hpp"
 
+
 class BoidConfig{
     public:
         BoidConfig();
@@ -23,7 +24,15 @@ class BoidConfig{
         bool Multithreaded() const;
         int AmountPrey() const;
         float BP(std::string param) const;
+
+        int WindowHeight() const;
+        int WindowWidth() const;
+        void WindowHeight(int wh);
+        void WindowWidth(int ww);
+
     private:
         std::shared_ptr<cpptoml::table> _config;
+        int _window_height;
+        int _window_width;
 
 };

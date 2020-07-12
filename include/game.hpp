@@ -42,7 +42,7 @@ private:
 	sf::Font f_uistatsfont;
 	void updateUiStat(int id,float value);
 	std::vector<PolarVector> PolVec;
-	Flock flock;
+	shared_ptr<Flock> flock;
 	float boidsSize;
 
 	// Not a very efficient solution to pass the sf::Text objects through to the render function but it's
