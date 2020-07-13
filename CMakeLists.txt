@@ -2,9 +2,13 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 ENABLE_LANGUAGE(CXX)
 
+if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.0)
+message(FATAL_ERROR "Please install g++ with Version equal or higher 8.0")
+endif()
+
 PROJECT(cppnd-boids CXX)
 
-set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=c++17 -pthread")
+set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=c++17 -pthread -lstdc++fs")
 set(OpenGL_GL_PREFERENCE GLVND)
 find_package(OpenGL)
 find_package(GLUT)
@@ -36,6 +40,9 @@ FOREACH(MODULE source include)
 ENDFOREACH(MODULE)
 
 ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCES} ${VERSION_FILE})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME}  sfml-window sfml-system sfml-graphics ${OPENGL_gl_LIBRARY} ${GLUT_LIBRARIES})
 
+TARGET_LINK_LIBRARIES(${PROJECT_NAME}  sfml-window sfml-system sfml-graphics ${OPENGL_gl_LIBRARY} ${GLUT_LIBRARIES} stdc++fs)
 
+if (CMAKE_COMPILER_IS_GNUCC AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.0)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} stdc++fs)
+endif()

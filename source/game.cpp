@@ -43,7 +43,7 @@ Game::Game()
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 	this->_window_height = desktop.height;
 	this->_window_width = desktop.width;
-	this->_window.create(sf::VideoMode(_window_width, _window_height, desktop.bitsPerPixel), "Boids", sf::Style::None);
+	this->_window.create(sf::VideoMode(_window_width, _window_height, desktop.bitsPerPixel), "Boids", sf::Style::Default);
 
 	// Print intstruction how to control Boids with curser keys
 	printInstructions();
