@@ -1,5 +1,8 @@
 # CppND-Boids
+
 This is my final project for the Udacity nano Degree C++ course, which I completed between May and September 2020. It is a reconstruction and extension of an existing project https://github.com/jyanar/Boids, regarding memory management, multithreading and object orientation. The choice of the task was based on the following criteria: Graphical development, swarm simulation, investigation of performance improvement through multithreading and intensive use of smart pointers. 
+
+![](assets/cppnd_boids.gif)
 
 Listing of the things I have introduced based on previous work:
 * Support of swarm simulation by multithreading, sorting of the single boids and parallel execution of the simulation.
