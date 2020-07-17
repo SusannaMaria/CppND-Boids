@@ -13,7 +13,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <math.h>
-
+#include <future>
 #include "pvector.hpp"
 
 /**
@@ -192,6 +192,18 @@ void Pvector::setMagnitude(float x)
 	mulScalar(x);
 }
 
+
+void cppnd_sqrt(std::promise<double>&& floatPromise, double a, double b){
+  double val = sqrt(a*a + b*b);
+  floatPromise.set_value(val);
+
+}
+void cppnd_dot(std::promise<double>&& floatPromise, float x1, float x2, float y1, float y2){
+  double val = x1 * x2 + y1 * y2;
+  floatPromise.set_value(val);
+
+}
+
 /**
  * @brief Calculate the angle between Pvector 1 and Pvector 2
  * 
@@ -202,10 +214,28 @@ float Pvector::angleBetween(Pvector v) const
 {
 	if (x == 0 && y == 0) return 0.0f;
 	if (v.x == 0 && v.y == 0) return 0.0f;
+	
+	// define the promises
+  	std::promise<double> sqrtv1mag;
+  	std::promise<double> sqrtv2mag;
+	std::promise<double> dotpromise;
 
-	double dot = x * v.x + y * v.y;
-	double v1mag = sqrt(x * x + y * y);
-	double v2mag = sqrt(v.x * v.x + v.y * v.y);
+	// get the futures
+	std::future<double> v1Result= sqrtv1mag.get_future();
+	std::future<double> v2Result= sqrtv2mag.get_future();
+	std::future<double> dotResult= dotpromise.get_future();
+
+	std::thread v1Thread(cppnd_sqrt,std::move(sqrtv1mag),x,y);
+	std::thread v2Thread(cppnd_sqrt,std::move(sqrtv2mag),v.X(),v.Y());
+ 	std::thread dotThread(cppnd_dot,std::move(dotpromise),X(),Y(),v.X(),v.Y());
+
+	double dot = dotResult.get();
+	double v1mag = v1Result.get();
+	double v2mag = v2Result.get();
+	v1Thread.join();
+	v2Thread.join();
+	dotThread.join();
+
 	double amt = dot / (v1mag * v2mag); //Based of definition of dot product
 	//dot product / product of magnitudes gives amt
 	if (amt <= -1) {

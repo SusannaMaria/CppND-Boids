@@ -87,7 +87,7 @@ void ThreadPool::thread_proc()
     }
 }
 /**
- * @brief Push Function into task queu
+ * @brief Push Function into task queue
  * 
  * @param f 
  */

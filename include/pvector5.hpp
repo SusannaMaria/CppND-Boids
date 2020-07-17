@@ -69,22 +69,34 @@ public:
         return (almost_equal(p->x, lhs.p->x, 2) && almost_equal(p->y, lhs.p->y, 2));
     }
 
-    explicit Pvector(BoidPoint *other)
-        : p{new BoidPoint{*other}}
-    {
-    }
-
+    // Rule of 5 implementation
+    /**
+     * @brief #2 Copy Constructor
+     * 
+     * @param other 
+     */
     Pvector(const Pvector &other)
         : p{new BoidPoint{*(other.p)}}
     {
     }
 
+    /**
+     * @brief #4 Move Constructor
+     * 
+     * @param other 
+     */
     Pvector(Pvector &&other)
         : p{other.p}
     {
         other.p = nullptr;
     }
 
+    /**
+     * @brief #2 Copy assignment constructor
+     * 
+     * @param other 
+     * @return Pvector& 
+     */
     Pvector &operator=(const Pvector &other)
     {
         if (&other != this)
@@ -96,7 +108,12 @@ public:
 
         return *this;
     }
-
+    /**
+     * @brief #5 Move assignment operator
+     * 
+     * @param other 
+     * @return Pvector& 
+     */
     Pvector &operator=(Pvector &&other)
     {
         if (&other != this)
@@ -108,11 +125,15 @@ public:
 
         return *this;
     }
-
+    /**
+     * @brief #3 Destroy the Pvector object
+     * 
+     */
     ~Pvector()
     {
         delete p;
     }
+    // END Rule of 5 implementation
 
     float X() const{ return p->x;}
     float Y() const{ return p->y;}
