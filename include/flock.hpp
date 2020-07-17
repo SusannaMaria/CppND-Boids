@@ -80,7 +80,6 @@ public:
 	void addBoid(float x, float y, bool predstatus, int unsigned spritenr, std::shared_ptr<AltSpriteHolder> spritecontainer);
 
 	shared_ptr<Boid> getBoidPtr(int id);
-	std::shared_ptr<AltSpriteHolder> SpriteContainer() const;
 	void sort();
 	void flockit();
 

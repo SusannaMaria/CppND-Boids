@@ -1,0 +1,17 @@
+digraph doxygraph
+{
+    node[shape=record,style=filled,fillcolor=gray95]
+graph [ rankdir="RL" ]
+"class_boid" -> "class_alt_sprite_holder" [label="shared_ptr" arrowtail="odiamond" dir="back" ]
+"class_boid" -> "class_flock" [label="parent" arrowtail="odiamond" dir="back" ]
+"class_boid" -> "class_pvector" [ arrowtail="diamond" dir="back" ]
+"class_boid_config" -> "classcpptoml_1_1table" [label="shared_ptr" arrowtail="odiamond" dir="back" ]
+"class_flock" -> "class_boid" [label="vector<vector<shared_ptr>>" arrowtail="odiamond" dir="back" ]
+"class_flock" -> "class_boid_config" [label="shared_ptr" arrowtail="odiamond" dir="back" ]
+"class_flock" -> "class_thread_pool" [ arrowtail="diamond" dir="back" ]
+"class_game" -> "class_alt_sprite_holder" [label="shared_ptr" arrowtail="odiamond" dir="back" ]
+"class_game" -> "class_obstacles_container" [label="shared_ptr" arrowtail="odiamond" dir="back" ]
+"class_game" -> "class_flock" [label="shared_ptr" arrowtail="odiamond" dir="back" ]
+"class_game" -> "class_boid_config" [label="shared_ptr" arrowtail="odiamond" dir="back" ]
+"class_obstacles_container" -> "class_obstacle" [label="vector<shared_ptr>" arrowtail="odiamond" dir="back" ]
+}

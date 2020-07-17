@@ -3,7 +3,7 @@
  * @author Jorge Yanar(https://github.com/jyanar), Susanna Hepp (https://github.com/SusannaMaria)
  * @brief Pvector class implements Euclidian vectors
  * Jorge: Base implementation
- * Susanna: Clean up code, almost_equal function
+ * Susanna: Clean up code, introduce almost_equal function
  * @version 1.0
  * @date 2020-07-10
  * 
