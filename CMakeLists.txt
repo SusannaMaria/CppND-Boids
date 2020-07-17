@@ -1,6 +1,14 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-
+include(FetchContent)
 ENABLE_LANGUAGE(CXX)
+
+################################
+# GTest
+################################
+set(GTEST_VERSION 1.10.0 CACHE STRING "Google test version")
+FetchContent_Declare(googletest
+GIT_REPOSITORY https://github.com/google/googletest.git
+GIT_TAG release-${GTEST_VERSION})
 
 if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.0)
 message(FATAL_ERROR "Please install g++ with Version equal or higher 8.0")
@@ -22,11 +30,18 @@ INCLUDE_DIRECTORIES(
 
 option(PACKAGE_TESTS "Build the tests" ON)
 if(PACKAGE_TESTS)
-  add_subdirectory(googletest)
-  # Add the testing executable
-  add_executable(test test/test_distance.cpp source/obstacle.cpp source/pvector.cpp)
 
-  target_link_libraries(test 
+  FetchContent_GetProperties(googletest)
+  if(NOT googletest_POPULATED)
+    FetchContent_Populate(googletest)
+    add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
+  endif()
+
+  enable_testing()
+  # Add the testing executable
+  add_executable(test_boid test/test_distance.cpp source/obstacle.cpp source/pvector.cpp)
+
+  target_link_libraries(test_boid 
       gtest_main 
       sfml-window sfml-system sfml-graphics    ${OPENGL_gl_LIBRARY}
       ${GLUT_LIBRARIES} 

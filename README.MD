@@ -1,7 +1,7 @@
 # CppND-Boids
-This is my final project for the Udacity nano Degree C++ course, which I completed between May and September 2020. It is a reconstruction and extension of an existing project https://github.com/jyanar/Boids, regarding memory management multithreading and object orientation. The choice of the task was based on the following criteria: Graphical development, swarm simulation, investigation of performance improvement through multithreading and intensive use of smart pointers. 
+This is my final project for the Udacity nano Degree C++ course, which I completed between May and September 2020. It is a reconstruction and extension of an existing project https://github.com/jyanar/Boids, regarding memory management, multithreading and object orientation. The choice of the task was based on the following criteria: Graphical development, swarm simulation, investigation of performance improvement through multithreading and intensive use of smart pointers. 
 
-Listing of the things I have introduced based on the project:
+Listing of the things I have introduced based on previous work:
 * Support of swarm simulation by multithreading, sorting of the single boids and parallel execution of the simulation.
 * Introduction of an obstacle class and further development of swarm behaviour to avoid objects.
 * Replacing the vector-based representation of the swarm with sprites
@@ -11,24 +11,28 @@ Listing of the things I have introduced based on the project:
 ...
 
 # Requirements
-g++ >= 8.0
-sudo apt-get install libsfml-dev
+I developed cppnd-boid exclusively on Ubuntu systems and can only give instructions on how to install the preconditions for libraries and build tools. 
+```
+apt-get install -y build-essential cmake libsfml-dev mesa-utils libgl1-mesa-glx libnvidia-gl-440
+```
+As a basis I used an Ubuntu 20.04 installation. https://releases.ubuntu.com/20.04/
+
+## Docker support
+I have added support for docker based development, building and execution of cppnd-boids under [docker/readme](Docker/README.MD). You could save yourself the trouble of installing the prerequisites provided that a Docker runtime environment and a network connection is available. Of course debugging with gdb under docker is not really comfortable ...
 
 # Install
+
 ```
 git clone https://github.com/SusannaMaria/CppND-Capstone.git
 cd CppND-Capstone/
 git submodule update --init --recursive
+```
+
 mkdir build
 cd build
 cmake ..
 make
 ```
-
-# Docker
-https://www.nvidia.com/de-de/drivers/unix/
-http://de.download.nvidia.com/XFree86/Linux-x86_64/450.57/NVIDIA-Linux-x86_64-450.57.run
-
 
 # Run
 ./cppnd-boids

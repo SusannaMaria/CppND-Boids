@@ -9,7 +9,10 @@ It should be enough to execute the ```./builddocker.sh``` script. It is importan
 ```
 sudo usermod -aG docker <your-user>
 ```
-I use an Ubuntu:20.04 Docker image as a basis. And install dependencies to NVIDIA drivers as well, otherwise the execution of cppnd-boids will not work in a system with Nvidia graphics card.
+I use an Ubuntu:20.04 Docker image as a basis. And install dependencies to NVIDIA drivers as well, otherwise the execution of cppnd-boids will not work in a system with Nvidia graphics card. But the docker image also works on systems where no NVIDIA GPU is installed. 
 
 # Execution of the docker
 It should be sufficient to execute the ```./rundocker``` script. The script allows you to start the docker gui applications and must be executed with privileged rights. 
+
+# building and executing cppnd-boids inside docker
+After the docker has been run, cppnd-boid can be built and run normally as if it were running on a prepared host. Follow the instructions in the central [readme](../README.MD)
