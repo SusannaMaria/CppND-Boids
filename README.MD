@@ -26,7 +26,7 @@ apt-get install -y build-essential cmake libsfml-dev mesa-utils libgl1-mesa-glx 
 As a basis I used an Ubuntu 20.04 installation. https://releases.ubuntu.com/20.04/
 
 ## Generally described dependencies
-* C++ compiler with c++17 standard
+* C++ compiler with c++17 standard, e.g. ```apt-get install -y g++-8```
 * cmake build system version greater than 3.11
 * Make build system
 * SFML (Simple and Fast Multimedia Library) version 2.5
