@@ -21,13 +21,16 @@ As a basis I used an Ubuntu 20.04 installation. https://releases.ubuntu.com/20.0
 I have added support for docker based development, building and execution of cppnd-boids under [docker/readme](Docker/README.MD). You could save yourself the trouble of installing the prerequisites provided that a Docker runtime environment and a network connection is available. Of course debugging with gdb under docker is not really comfortable ...
 
 # Install
-The repository must be cloned locally
+The repository must be cloned locally.  When the unittests are run, the build configuration automatically downloads googletest from github.
 
 ```
-git clone https://github.com/SusannaMaria/CppND-Capstone.git
-cd CppND-Capstone/
+git clone https://github.com/SusannaMaria/CppND-Boids.git
+cd CppND-Boids
 ```
 
+# Build
+The build is configured with Cmake and finally built with make. To prevent temporary artifacts like .o files from being in the main directory, the build should be executed in a subfolder.
+```
 mkdir build
 cd build
 cmake ..
@@ -35,9 +38,13 @@ make
 ```
 
 # Run
+The program is started without parameters and can only be configured via configuration file.
+```
 ./cppnd-boids
+```
 
 # Control-Keys during run
+The behaviour of the swarm can be influenced during runtime. The following keys can be used:
 ```
 --------------Instructions--------------
 Press 'Q' to increase Separation Amount
@@ -82,5 +89,5 @@ amountobstacles = 5
 gridx = 4
 gridy = 3
 fontsize = 12
-rootpath = "/home/aosuser/CppND-Capstone/build/.."
+rootpath = <is automatically set to the installation directory at the first start.>
 ```
