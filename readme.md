@@ -25,6 +25,11 @@ cmake ..
 make
 ```
 
+# Docker
+https://www.nvidia.com/de-de/drivers/unix/
+http://de.download.nvidia.com/XFree86/Linux-x86_64/450.57/NVIDIA-Linux-x86_64-450.57.run
+
+
 # Run
 ./cppnd-boids
 
