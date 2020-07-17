@@ -94,3 +94,20 @@ gridy = 3
 fontsize = 12
 rootpath = <is automatically set to the installation directory at the first start.>
 ```
+
+# Basics of the Boids swarm simulation (Excerpts from https://en.wikipedia.org/wiki/Boids)
+Boids is the term for certain interacting objects in a computer simulation. The name comes from a groundbreaking artificial life program developed by Craig Reynolds in 1986 to simulate the swarming behaviour of birds. He referred to the simulated objects as boids. 
+
+Boid-based models represent a form of emergent behaviour, i.e. the complexity of the model results from the interaction of the individual boids, which follow a simple set of rules.
+* **Separation**: select a direction that counteracts an accumulation of boids
+
+![](assets/Rule_separation.gif)
+* **Alignment**: select a direction that corresponds to the mean direction of the neighboring boids
+
+![](assets/Rule_alignment.gif)
+* **Cohesion**: choose a direction that corresponds to the middle position of the neighboring boids
+
+![](assets/Rule_cohesion.gif)
+* **Avoidance**: Adapt the direction to avoid hitting obstacles
+
+![](assets/Rule_avoidance.gif)
