@@ -243,7 +243,7 @@ void Pvector::normalize()
  */
 Pvector Pvector::copy(Pvector v)
 {
-	Pvector copy(v.p);
+	Pvector copy(v);
 	return copy;
 }
 }
