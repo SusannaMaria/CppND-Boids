@@ -33,6 +33,7 @@ if(PACKAGE_TESTS)
 
   FetchContent_GetProperties(googletest)
   if(NOT googletest_POPULATED)
+    message(STATUS "Download googletest")
     FetchContent_Populate(googletest)
     add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
   endif()

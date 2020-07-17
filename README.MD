@@ -13,7 +13,7 @@ Listing of the things I have introduced based on previous work:
 # Requirements
 I developed cppnd-boid exclusively on Ubuntu systems and can only give instructions on how to install the preconditions for libraries and build tools. 
 ```
-apt-get install -y build-essential cmake libsfml-dev mesa-utils libgl1-mesa-glx libnvidia-gl-440
+apt-get install -y build-essential cmake libsfml-dev mesa-utils libgl1-mesa-glx libnvidia-gl-440 git
 ```
 As a basis I used an Ubuntu 20.04 installation. https://releases.ubuntu.com/20.04/
 
@@ -21,11 +21,11 @@ As a basis I used an Ubuntu 20.04 installation. https://releases.ubuntu.com/20.0
 I have added support for docker based development, building and execution of cppnd-boids under [docker/readme](Docker/README.MD). You could save yourself the trouble of installing the prerequisites provided that a Docker runtime environment and a network connection is available. Of course debugging with gdb under docker is not really comfortable ...
 
 # Install
+The repository must be cloned locally
 
 ```
 git clone https://github.com/SusannaMaria/CppND-Capstone.git
 cd CppND-Capstone/
-git submodule update --init --recursive
 ```
 
 mkdir build
