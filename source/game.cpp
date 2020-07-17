@@ -10,6 +10,10 @@
  * @copyright Copyright (c) 2020
  * 
  */
+
+// this is because Udacitys workspacehas only 2.3.x of SFML installed
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 #include <iostream>
 #include <memory>
 #include <fstream>
@@ -76,7 +80,10 @@ void Game::_AddUiStat(int xpos, string text)
 	int nr = _uistats.size();
 	std::shared_ptr<sf::Text> eleText = std::make_shared<sf::Text>(text, _uistatsfont);
 
-	eleText->setFillColor(sf::Color::White);
+	// this is because Udacitys workspacehas only 2.3.x of SFML installed
+	//eleText->setFillColor(sf::Color::White);
+	eleText->setColor(sf::Color::White);
+	
 	eleText->setCharacterSize(fontsize);
 	eleText->setPosition(_window_width - xpos, nr * fontsize);
 
