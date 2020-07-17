@@ -95,5 +95,10 @@ public:
 	float angleBetween(Pvector v) const;
 	void normalize();
 
+    float X() const{ return x;}
+    float Y() const{ return y;}
+    void X(float my_x){ x=my_x;}
+    void Y(float my_y){ y=my_y;}
+
 	static Pvector copy(Pvector v);
 };

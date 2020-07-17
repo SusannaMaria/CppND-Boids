@@ -16,7 +16,16 @@
 #include <vector>
 #include <memory>
 #include "altspriteholder.hpp"
+
+#if defined(USE_RULE_OF_5)
+#include "pvector5.hpp"
+#else
 #include "pvector.hpp"
+#endif
+
+#if defined(USE_RULE_OF_5)
+using ruleof5::Pvector;
+#endif
 
 using namespace std;
 
@@ -63,7 +72,7 @@ public:
 	 * @param flockptr 
 	 */
 	void SpriteContainer(std::shared_ptr<AltSpriteHolder> sc) { this->spritecontainer = sc; }
-	std::shared_ptr<AltSpriteHolder>  SpriteContainer() const { return this->spritecontainer;}
+	std::shared_ptr<AltSpriteHolder> SpriteContainer() const { return this->spritecontainer; }
 	/**
 	 * @brief Adds force Pvector to current force Pvector
 	 * 
@@ -98,13 +107,13 @@ public:
 
 	Pvector seek(Pvector v);
 
-	void run(vector<shared_ptr<Boid>> const &v);
+	void run(vector<shared_ptr<Boid>> const &boids);
 
 	void update();
-	void flock(vector<shared_ptr<Boid>> const &v);
+	void flock(vector<shared_ptr<Boid>> const &boids);
 	void borders();
 	float getAngle(Pvector v) const;
-	bool PredatorStatus() const{ return predatorStatus;}
+	bool PredatorStatus() const { return predatorStatus; }
 	float Theta() const;
 	void Theta(float theta) { this->theta = theta; }
 
@@ -115,8 +124,8 @@ public:
 	Pvector Velocity() const { return velocity; }
 	Pvector Acceleration() const { return acceleration; }
 
-	void Velocity(Pvector pv){this->velocity = pv;}
-	void Acceleration(Pvector pv){this->acceleration = pv;}
+	void Velocity(Pvector pv) { this->velocity = pv; }
+	void Acceleration(Pvector pv) { this->acceleration = pv; }
 
 	void Spritenr(unsigned int n) { spritenr = n; }
 

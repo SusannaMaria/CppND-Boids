@@ -332,7 +332,7 @@ void Game::_Render(float fps, unsigned int counter)
 		float diff = -boid->updateThetaGetDiff();
 
 		// Update the sprizes
-		boid->SpriteContainer()->setPosition(boid->Spritenr(), boid->Location().x, boid->Location().y);
+		boid->SpriteContainer()->setPosition(boid->Spritenr(), boid->Location().X(), boid->Location().Y());
 		// Calculates the angle where the velocity is pointing so that the triangle turns towards it.
 		boid->SpriteContainer()->rotateAroundSelf(boid->Spritenr(), diff, true);
 	}

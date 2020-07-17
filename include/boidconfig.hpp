@@ -32,6 +32,12 @@ class BoidConfig{
         int GridX() const;
         int GridY() const;
         int FontSize() const;
+        // Overloaded function to print values
+        void printValue(const int value);
+        void printValue(const bool value);
+        void printValue(const float value);
+        void printValue(const std::string value);
+        void printValue(const char *value);
 
     private:
 		const char *toml_config = R"TOMLCONFIG([boids]

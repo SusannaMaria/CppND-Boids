@@ -21,7 +21,6 @@
 class ObstaclesContainer : public sf::Drawable
 {
 public:
-    ObstaclesContainer() {}
     ObstaclesContainer(shared_ptr<Flock> flockptr, int width, int height, int maxradius);
     void avoid(shared_ptr<Boid> boid);
 

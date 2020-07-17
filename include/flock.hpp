@@ -26,7 +26,7 @@ class Flock : public std::enable_shared_from_this<Flock>
 {
 public:
 	//Constructors
-	Flock(){};
+	Flock(): _window_height(),_window_width(), _grid_x(), _grid_y(), _desSep(0.f), _desAli(0.f), _desCoh(0.f), _sepW(0.f), _aliW(0.f), _cohW(0.f), _theta(){}
 
 	// Accessor functions
 	int getSize() const { return _flockvect.size(); }

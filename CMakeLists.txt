@@ -16,6 +16,7 @@ endif()
 
 PROJECT(cppnd-boids CXX)
 
+# set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=c++17 -pthread -lstdc++fs -DUSE_RULE_OF_5")
 set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=c++17 -pthread -lstdc++fs")
 set(OpenGL_GL_PREFERENCE GLVND)
 find_package(OpenGL)
@@ -40,7 +41,7 @@ if(PACKAGE_TESTS)
 
   enable_testing()
   # Add the testing executable
-  add_executable(test_boid test/test_distance.cpp source/obstacle.cpp source/pvector.cpp)
+  add_executable(test_boid test/test_distance.cpp test/test_overloadfunction.cpp source/obstacle.cpp source/pvector.cpp source/pvector5.cpp source/boidconfig.cpp)
 
   target_link_libraries(test_boid 
       gtest_main 

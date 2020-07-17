@@ -26,7 +26,7 @@ BoidConfig::BoidConfig()
 	// Get location in which the application is executed, c++17 feature
 	string curlocation = std::filesystem::current_path().string();
 
-	// Standard  locations 
+	// Standard  locations
 	// 1. same location as executable(current directory)
 	// 2. parent directory of current directory
 	const static vector<string> locpos{curlocation, curlocation + "/.."};
@@ -52,18 +52,20 @@ BoidConfig::BoidConfig()
 
 		std::cerr << "Failed to parse config, create: " << path << std::endl;
 
-		ofstream ofs(path);
-
-		if (!ofs)
 		{
-			cout << "Error writing default config file" << endl;
-			exit(1);
-		}
-		// autogeneration of absolute rootpath
-		ofs << toml_config << endl
-			<< "rootpath = \"" << curlocation << "/..\"";
-		ofs.close();
+			ofstream ofs(path);
 
+			if (!ofs)
+			{
+				cout << "Error writing default config file" << endl;
+				exit(1);
+			}
+			// autogeneration of absolute rootpath
+			ofs << toml_config << endl
+				<< "rootpath = \"" << curlocation << "/..\"";
+			//According to RAII: fstream closing is not necessary
+			//ofs.close();
+		}
 		// After generation try to load the newly generated configfile
 		try
 		{
@@ -183,4 +185,36 @@ int BoidConfig::FontSize() const
 {
 	int result = *(_config->get_qualified_as<int>("boids.fontsize"));
 	return result;
+}
+
+/**
+ * @brief Demonstration of Overloaded functions for Project submission
+ * 
+ * @param value 
+ */
+void BoidConfig::printValue(const int value)
+{
+	string str = to_string(value);
+	cout << "string value of integer value is :" << str << endl;
+}
+
+void BoidConfig::printValue(const bool value)
+{
+	cout << "string value of bool value is :" << std::boolalpha << value << endl;
+}
+
+void BoidConfig::printValue(const float value)
+{
+	string str = to_string(value);
+	cout << "string value of float value is :" << str << endl;
+}
+
+void BoidConfig::printValue(const std::string value)
+{
+	cout << "string value is :" << value << endl;
+}
+
+void BoidConfig::printValue(const char *value)
+{
+	cout << "string value is :" << value << endl;
 }

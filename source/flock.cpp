@@ -82,8 +82,8 @@ void Flock::sort()
 	for (int i = 0; i < _flockvect.size(); i++)
 	{
 
-		int segidx = (int)floor(_flockvect[i]->Location().x / xs);
-		int segidy = (int)floor(_flockvect[i]->Location().y / ys);
+		int segidx = (int)floor(_flockvect[i]->Location().X() / xs);
+		int segidy = (int)floor(_flockvect[i]->Location().Y() / ys);
 
 		if (segidx > _grid_x - 1)
 		{

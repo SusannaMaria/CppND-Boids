@@ -12,9 +12,23 @@
 #include <cmath>
 #define PI 3.14159265
 #include <iostream>
+
+#if defined(USE_RULE_OF_5)
+#include "pvector5.hpp"
+#else
 #include "pvector.hpp"
+#endif
+
+
+
+
 #include "boid.hpp"
 #include "obstacle.hpp"
+
+
+#if defined(USE_RULE_OF_5)
+using ruleof5::Pvector;
+#endif
 
 /**
  * @brief draw function
@@ -60,8 +74,8 @@ void Obstacle::avoid(shared_ptr<Boid> boid)
     }
     Pvector result;
     Pvector velold = boid->Velocity();
-    result.x = velold.x * cos(steerAngle) + velold.y * sin(steerAngle);
-    result.y = -1 * velold.x * sin(steerAngle) + velold.y * cos(steerAngle);
+    result.X(velold.X() * cos(steerAngle) + velold.Y() * sin(steerAngle));
+    result.Y(-1 * velold.X() * sin(steerAngle) + velold.Y() * cos(steerAngle));
 
     boid->Velocity(result);
 }

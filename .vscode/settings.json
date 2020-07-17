@@ -64,6 +64,7 @@
         "future": "cpp",
         "*.h++": "cpp",
         "charconv": "cpp",
-        "codecvt": "cpp"
+        "codecvt": "cpp",
+        "*.cuh": "cpp"
     }
 }
