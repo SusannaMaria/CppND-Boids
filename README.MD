@@ -34,7 +34,7 @@ As a basis I used an Ubuntu 20.04 installation. https://releases.ubuntu.com/20.0
 * NVIDIA drivers if appropriate GPU is available
 
 ## Docker support
-I have added support for docker based development, building and execution of cppnd-boids under [docker/readme](Docker/README.MD). You could save yourself the trouble of installing the prerequisites provided that a Docker runtime environment and a network connection is available. Of course debugging with gdb under docker is not really comfortable ...
+I have added support for docker based development, building and execution of cppnd-boids under [docker/readme](docker/README.MD). You could save yourself the trouble of installing the prerequisites provided that a Docker runtime environment and a network connection is available. Of course debugging with gdb under docker is not really comfortable ...
 
 # Install
 The repository must be cloned locally.  When the unittests are run, the build configuration automatically downloads googletest from github.
